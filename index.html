@@ -3,152 +3,1120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor Profissional Pro</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
+    <title>Hub Profissional - Calculadora & Conversor</title>
     <style>
+        :root {
+            --color-primary: #FFD700;
+            --color-primary-hover: #FFC700;
+            --color-secondary: #00A86B;
+            --color-danger: #E63946;
+            --color-success: #00A86B;
+            --color-warning: #FF9500;
+            --color-bg: #f8f9fa;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-light: #666666;
+            --color-border: #e0e0e0;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --radius: 10px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bg: #0f0f0f;
+                --color-surface: #1e1e1e;
+                --color-text: #f5f5f5;
+                --color-text-light: #a0a0a0;
+                --color-border: #333333;
+            }
+        }
+
+        /* Dark Mode Manual */
+        body.dark-mode {
+            --color-bg: #0f0f0f;
+            --color-surface: #1e1e1e;
+            --color-text: #f5f5f5;
+            --color-text-light: #a0a0a0;
+            --color-border: #333333;
+            background-color: #0f0f0f !important;
+        }
+
+        /* Light Mode Manual */
+        body.light-mode {
+            --color-bg: #f8f9fa;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-light: #666666;
+            --color-border: #e0e0e0;
+            background-color: #f8f9fa !important;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: rgba(0, 0, 0, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0;
+            border-radius: var(--radius);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.08);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.96);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #f4c430;
-            --primary-dark: #d4a520;
-            --primary-light: #ffd966;
-            --secondary: #f4c430;
-            --accent: #f4c430;
-            --danger: #ef4444;
-            --success: #10b981;
-            --bg-primary: #f5f5f5;
-            --bg-secondary: #ffffff;
-            --text-primary: #1a1a1a;
-            --text-secondary: #666666;
-            --border-color: #e0e0e0;
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        [data-theme="dark"] {
-            --primary: #f4c430;
-            --primary-dark: #d4a520;
-            --primary-light: #ffd966;
-            --secondary: #f4c430;
-            --accent: #f4c430;
-            --danger: #ef4444;
-            --success: #10b981;
-            --bg-primary: #1a1a1a;
-            --bg-secondary: #2d2d2d;
-            --text-primary: #f5f5f5;
-            --text-secondary: #b0b0b0;
-            --border-color: #404040;
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        html {
-            scroll-behavior: smooth;
-            color-scheme: light dark;
+        html, body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
-            min-height: 100vh;
-            padding: 16px;
-            color: var(--text-primary);
-            transition: background 0.3s ease;
-        }
-
-        [data-theme="dark"] body {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
-        }
-
-        [data-theme="light"] body {
-            background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
-        }
-
-        .container {
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-            animation: slideDown 0.6s ease-out;
-        }
-
-        .header-top {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            width: calc(100% - 24px);
+            min-height: 100vh;
+            border-radius: 20px;
+            overflow: auto;
+            margin: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+            color: #000;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 4px solid var(--color-secondary);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 16px;
+            min-height: auto;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .header > div {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-xl);
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #f4c430;
-            margin-bottom: 4px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .header p {
-            font-size: 0.95rem;
-            color: #b0b0b0;
+        .header-subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+            font-weight: 600;
+            margin: 2px 0 0 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        .header-buttons {
+        /* Main Container */
+        .container {
             display: flex;
-            gap: 8px;
-            align-items: center;
+            flex: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            background-color: var(--color-bg);
+            border-radius: 0 0 16px 16px;
+            min-height: fit-content;
         }
 
-        .icon-btn {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: var(--color-surface);
+            border-radius: 16px;
+            box-shadow: var(--shadow), 0 4px 16px rgba(0, 0, 0, 0.12);
+            padding: var(--spacing-lg);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            border: 2px solid var(--color-border);
+        }
+
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-md);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-button {
+            display: block;
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            background: transparent;
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
             cursor: pointer;
-            display: flex;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-text);
+            transition: all 0.25s ease;
+            text-align: left;
+        }
+
+        .nav-button:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            background-color: rgba(255, 215, 0, 0.08);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15);
+        }
+
+        .nav-button.active {
+            background-color: var(--color-secondary);
+            color: white;
+            border-color: var(--color-secondary);
+            box-shadow: 0 4px 12px rgba(0, 168, 107, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            background: var(--color-surface);
+            border-radius: 16px;
+            box-shadow: var(--shadow), 0 4px 16px rgba(0, 0, 0, 0.12);
+            padding: var(--spacing-lg);
+            max-height: none;
+            overflow-y: auto;
+            border: 1px solid var(--color-border);
+            min-height: fit-content;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2), 0 4px 12px rgba(33, 150, 243, 0.15);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
+            gap: var(--spacing-xs);
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        .icon-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:active {
+            background-color: #FFB700;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #008c5a;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 168, 107, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background-color: var(--color-danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d62828;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(230, 57, 70, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-success {
+            background-color: var(--color-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #008c5a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
+        }
+
+        .btn-small {
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 12px;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Result Display */
+        .result-box {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(76, 175, 80, 0.1));
+            border-left: 4px solid var(--color-primary);
+            padding: var(--spacing-lg);
+            border-radius: 14px;
+            margin: var(--spacing-md) 0;
+            display: none;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .result-box.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--color-primary);
+            color: #000;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--color-primary-hover);
+            transform: scale(1.08);
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .copy-btn.copied {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .print-btn {
+            position: absolute;
+            top: 12px;
+            right: 62px;
+            background: var(--color-secondary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .print-btn:hover {
+            background: #008c5a;
+            transform: scale(1.08);
+            box-shadow: 0 2px 8px rgba(0, 168, 107, 0.3);
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .result-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .result-subtitle {
+            font-size: 13px;
+            color: var(--color-text-light);
+            margin-top: var(--spacing-sm);
+        }
+
+        /* Grid Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .form-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-grid.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+        }
+
+        .table th,
+        .table td {
+            padding: var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .table th {
+            background-color: rgba(33, 150, 243, 0.05);
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .table tr:hover {
+            background-color: rgba(33, 150, 243, 0.02);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: var(--spacing-sm);
+            border-bottom: 2px solid var(--color-border);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: var(--spacing-md);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-light);
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            color: var(--color-primary);
+        }
+
+        .tab-button.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* History */
+        .history-item {
+            background: rgba(33, 150, 243, 0.05);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item-text {
+            flex: 1;
+        }
+
+        .history-item-value {
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-right: var(--spacing-md);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-lg) * 2;
+            color: var(--color-text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .container {
+                gap: var(--spacing-md);
+                padding: var(--spacing-lg);
+            }
+
+            .form-grid.three-col {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                gap: var(--spacing-lg);
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                padding: var(--spacing-lg);
+            }
+
+            .form-grid.three-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                gap: var(--spacing-lg);
+                padding: var(--spacing-md);
+            }
+
+            .header {
+                padding: var(--spacing-md);
+            }
+
+            .header > div {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header-subtitle {
+                font-size: 12px;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                padding: var(--spacing-md);
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: var(--spacing-sm);
+                max-height: none;
+            }
+
+            .sidebar-title {
+                grid-column: 1 / -1;
+            }
+
+            .nav-button {
+                padding: var(--spacing-md);
+                font-size: 13px;
+                margin-bottom: 0;
+            }
+
+            .content {
+                padding: var(--spacing-lg);
+                max-height: none;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+                gap: var(--spacing-sm);
+            }
+
+            .tab-button {
+                padding: var(--spacing-md);
+                font-size: 13px;
+            }
+
+            .result-value {
+                font-size: 24px;
+            }
+
+            .copy-btn,
+            .print-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+                top: 8px;
+            }
+
+            .print-btn {
+                right: 58px;
+            }
+
+            .copy-btn {
+                right: 8px;
+            }
+
+            .btn {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 13px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+
+            .btn-group .btn {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --spacing-lg: 16px;
+                --spacing-md: 12px;
+            }
+
+            body {
+                font-size: 14px;
+            }
+
+            .header {
+                padding: var(--spacing-md) var(--spacing-sm);
+            }
+
+            .header > div {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+                width: 100%;
+            }
+
+            .header h1 {
+                font-size: 18px;
+                margin: 0;
+            }
+
+            .header-subtitle {
+                font-size: 11px;
+                margin: 2px 0 0 0;
+            }
+
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+                padding: 6px;
+                font-size: 16px;
+            }
+
+            .container {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                padding: var(--spacing-md);
+                max-width: 100%;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: var(--spacing-md);
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--spacing-xs);
+                max-height: none;
+                position: static;
+                border: none;
+                box-shadow: none;
+                background: transparent;
+            }
+
+            .sidebar-title {
+                grid-column: 1 / -1;
+                font-size: 11px;
+                margin: var(--spacing-sm) 0 var(--spacing-xs) 0;
+            }
+
+            .nav-button {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 12px;
+                margin-bottom: 0;
+                border-radius: 6px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .content {
+                padding: var(--spacing-md);
+                max-height: none;
+                overflow-y: auto;
+                border: none;
+                box-shadow: none;
+            }
+
+            .section-title {
+                font-size: 18px;
+                margin-bottom: var(--spacing-md);
+                gap: var(--spacing-sm);
+            }
+
+            .subsection {
+                padding: var(--spacing-md);
+                margin-bottom: var(--spacing-md);
+            }
+
+            .subsection-title {
+                font-size: 14px;
+                margin-bottom: var(--spacing-sm);
+            }
+
+            .formula {
+                padding: var(--spacing-md);
+                font-size: 11px;
+                margin-bottom: var(--spacing-md);
+            }
+
+            .form-group {
+                margin-bottom: var(--spacing-sm);
+            }
+
+            label {
+                font-size: 12px;
+                margin-bottom: 2px;
+            }
+
+            input[type="number"],
+            input[type="text"],
+            select {
+                padding: var(--spacing-sm);
+                font-size: 14px;
+                border-radius: 6px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .form-grid.three-col {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                padding: 10px var(--spacing-md);
+                font-size: 12px;
+                border-radius: 6px;
+                gap: var(--spacing-xs);
+            }
+
+            .btn-group {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+                margin-top: var(--spacing-md);
+            }
+
+            .btn-group .btn {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .btn-small {
+                padding: 6px var(--spacing-md);
+                font-size: 11px;
+            }
+
+            .result-box {
+                padding: var(--spacing-md);
+                margin: var(--spacing-md) 0;
+                border-left: 3px solid var(--color-primary);
+                position: relative;
+            }
+
+            .result-label {
+                font-size: 11px;
+                margin-bottom: var(--spacing-sm);
+            }
+
+            .result-value {
+                font-size: 22px;
+                font-weight: bold;
+                color: var(--color-primary);
+            }
+
+            .result-subtitle {
+                font-size: 12px;
+                color: var(--color-text-light);
+                margin-top: var(--spacing-sm);
+            }
+
+            .copy-btn,
+            .print-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+                border-radius: 4px;
+                top: 6px;
+            }
+
+            .print-btn {
+                right: 52px;
+            }
+
+            .copy-btn {
+                right: 6px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+                gap: var(--spacing-xs);
+                margin-bottom: var(--spacing-md);
+            }
+
+            .tab-button {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 12px;
+                border-bottom: 2px solid transparent;
+                margin-bottom: 0;
+            }
+
+            .tab-button.active {
+                border-bottom-color: var(--color-primary);
+            }
+
+            .history-section {
+                margin-top: var(--spacing-md);
+                padding: var(--spacing-md);
+            }
+
+            .history-list {
+                max-height: 200px;
+            }
+
+            .history-item-btn {
+                padding: var(--spacing-sm);
+                font-size: 12px;
+                margin-bottom: var(--spacing-xs);
+            }
+
+            .history-time {
+                font-size: 10px;
+                margin-top: 2px;
+            }
+
+            .empty-state {
+                padding: var(--spacing-lg);
+            }
+
+            .empty-state-icon {
+                font-size: 40px;
+            }
+
+            .input-feedback {
+                font-size: 10px;
+                margin-top: 2px;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table th,
+            .table td {
+                padding: var(--spacing-sm);
+            }
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 var(--spacing-lg) 0;
+            color: var(--color-primary);
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .subsection {
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), rgba(0, 168, 107, 0.03));
+            border-radius: 14px;
+            border-left: 4px solid var(--color-primary);
+            border: 1px solid var(--color-border);
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .subsection:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-color: var(--color-primary);
             transform: translateY(-2px);
         }
 
+        .subsection-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-text);
+            letter-spacing: -0.2px;
+        }
+
+        .formula {
+            background: rgba(33, 150, 243, 0.1);
+            padding: var(--spacing-md);
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-md);
+            border: 1px solid var(--color-primary);
+            border-left: 3px solid var(--color-secondary);
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .input-feedback {
+            font-size: 11px;
+            margin-top: 4px;
+            color: var(--color-warning);
+        }
+
+        .input-feedback.success {
+            color: var(--color-success);
+        }
+
+        .input-feedback.error {
+            color: var(--color-danger);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .btn-group .btn-danger {
+            flex: 0.8;
+        }
+
+        .history-section {
+            margin-top: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: rgba(33, 150, 243, 0.02);
+            border-radius: var(--radius);
+            display: none;
+        }
+
+        .history-section.show {
+            display: block;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item-btn {
+            background: none;
+            border: 1px solid var(--color-border);
+            padding: var(--spacing-md);
+            border-radius: 12px;
+            margin-bottom: var(--spacing-sm);
+            width: 100%;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .history-item-btn:hover {
+            border-color: var(--color-primary);
+            background: rgba(33, 150, 243, 0.05);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .history-time {
+            font-size: 11px;
+            color: var(--color-text-light);
+            margin-top: 4px;
+        }
+
+        /* Decimal places selector */
+        .decimal-selector {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: var(--radius);
+            border: 1px solid var(--color-border);
+        }
+
+        .decimal-selector label {
+            margin: 0;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .decimal-selector select {
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--color-border);
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Status indicator */
         .status-indicator {
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
             padding: 6px 12px;
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-success);
+            border: 1px solid rgba(76, 175, 80, 0.3);
         }
 
         .status-dot {
             width: 8px;
             height: 8px;
+            background: var(--color-success);
             border-radius: 50%;
-            background: var(--success);
             animation: pulse 2s infinite;
-        }
-
-        .status-dot.offline {
-            background: var(--danger);
-            animation: none;
         }
 
         @keyframes pulse {
@@ -156,1358 +1124,1228 @@
             50% { opacity: 0.5; }
         }
 
-        .card {
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 32px 24px;
-            box-shadow: var(--shadow);
-            animation: fadeInUp 0.6s ease-out;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        .tabs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 28px;
-            padding: 0 0 16px 0;
-        }
-
-        .tab-btn {
-            padding: 12px 16px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            text-align: center;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(244, 196, 48, 0.3);
-        }
-
-        .tab-btn:hover {
-            border-color: var(--primary);
-            background: rgba(244, 196, 48, 0.1);
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.85rem;
-        }
-
-        .label-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            gap: 12px;
-        }
-
-        .label-row label {
-            margin: 0;
-        }
-
-        .decimal-selector {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .decimal-selector select {
-            width: 70px;
-            padding: 8px 10px;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.85rem;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .decimal-selector select:hover,
-        .decimal-selector select:focus {
-            border-color: var(--primary);
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            color: var(--text-primary);
-            background: var(--bg-primary);
-            transition: all 0.3s ease;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: var(--bg-secondary);
-            box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.15);
-        }
-
-        input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .input-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 8px;
-        }
-
-        @media (max-width: 480px) {
-            .input-group {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-        }
-
-        .btn {
-            width: 100%;
-            padding: 16px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(244, 196, 48, 0.3);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border: 2px solid var(--border-color);
-            font-size: 0.9rem;
-            padding: 10px 16px;
-            width: auto;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-icon {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 8px;
-            margin-bottom: 8px;
-        }
-
-        .btn-icon:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .result-box {
-            background: linear-gradient(135deg, rgba(244, 196, 48, 0.08) 0%, rgba(244, 196, 48, 0.04) 100%);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        [data-theme="light"] .result-box {
-            background: linear-gradient(135deg, rgba(244, 196, 48, 0.06) 0%, rgba(244, 196, 48, 0.02) 100%);
-        }
-
-        .result-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            font-weight: 700;
-        }
-
-        .result-value {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--primary);
-            word-break: break-word;
-            margin-bottom: 14px;
-            line-height: 1.2;
-        }
-
-        .result-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-
-        .copy-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 16px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(244, 196, 48, 0.2);
-        }
-
-        .copy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(244, 196, 48, 0.3);
-        }
-
-        .share-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 16px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .share-btn:hover {
-            border-color: var(--primary);
-            background: rgba(244, 196, 48, 0.1);
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .error-message {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
-            border: 2px solid var(--danger);
-            color: var(--danger);
-            padding: 14px 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            font-size: 0.9rem;
-            display: none;
-            animation: slideDown 0.3s ease-out;
-            font-weight: 600;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .loader {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(244, 196, 48, 0.3);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .favorites-section {
-            background: linear-gradient(135deg, rgba(244, 196, 48, 0.06) 0%, rgba(244, 196, 48, 0.02) 100%);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            padding: 18px;
-            margin-top: 28px;
-        }
-
-        .favorites-title {
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: var(--text-primary);
-            margin-bottom: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
-
-        .favorite-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border: 2px solid var(--primary);
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 8px;
-            margin-bottom: 8px;
-        }
-
-        .favorite-btn:hover {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(244, 196, 48, 0.3);
-        }
-
-        .modal {
+        /* QR Code modal */
+        .qr-modal {
             display: none;
             position: fixed;
-            z-index: 2000;
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .modal.show {
-            display: flex;
+            background-color: rgba(0, 0, 0, 0.5);
             align-items: center;
             justify-content: center;
         }
 
-        .modal-content {
-            background: var(--bg-secondary);
-            padding: 32px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            max-width: 400px;
-            animation: slideUp 0.3s ease-out;
+        .qr-modal.show {
+            display: flex;
         }
 
-        .modal-content h3 {
-            margin-bottom: 20px;
-            color: var(--text-primary);
+        .qr-modal-content {
+            background: var(--color-surface);
+            padding: var(--spacing-lg);
+            border-radius: 16px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         .qr-code {
-            margin: 20px 0;
+            width: 200px;
+            height: 200px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin: var(--spacing-md) auto;
+            border: 2px solid var(--color-border);
         }
 
-        .qr-code canvas {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .success-message {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--success);
+        .qr-close {
+            background: var(--color-danger);
             color: white;
-            padding: 16px 24px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            animation: slideInRight 0.3s ease-out;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: var(--spacing-md);
+            transition: all 0.2s ease;
+        }
+
+        .qr-close:hover {
+            background: #d62828;
+            transform: scale(1.05);
+        }
+
+        /* Favorites badge */
+        .favorite-btn {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--color-border);
+            color: var(--color-primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
             font-weight: 600;
-            z-index: 1000;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        @media (max-width: 480px) {
-            .success-message {
-                bottom: 16px;
-                right: 16px;
-                left: 16px;
-                text-align: center;
-            }
+        .favorite-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.05);
         }
 
-        /* Animações */
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .favorite-btn.active {
+            background: var(--color-primary);
+            color: #000;
+            border-color: var(--color-primary);
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* History table */
+        .history-table {
+            width: 100%;
+            margin-top: var(--spacing-md);
+            border-collapse: collapse;
+            font-size: 12px;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+        .history-table th,
+        .history-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .history-table th {
+            background: rgba(255, 215, 0, 0.1);
+            font-weight: 600;
+            color: var(--color-primary);
         }
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Mobile Responsividade */
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-
-            .card {
-                padding: 20px 16px;
-                border-radius: 12px;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .header p {
-                font-size: 0.9rem;
-            }
-
-            .result-value {
-                font-size: 1.8rem;
-            }
-
-            .tabs {
-                gap: 8px;
-                margin-bottom: 20px;
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            }
-
-            .tab-btn {
-                padding: 10px 12px;
-                font-size: 0.8rem;
-                border-radius: 8px;
-            }
-
-            input,
-            select {
-                padding: 12px 14px;
-                font-size: 16px;
-            }
-
-            .input-group {
-                gap: 12px;
-            }
-
-            .header-buttons {
-                gap: 6px;
-            }
-
-            .icon-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-
-            .result-actions {
-                gap: 8px;
-            }
-
-            .copy-btn,
-            .share-btn,
-            .btn-icon {
-                padding: 9px 12px;
-                font-size: 0.8rem;
-            }
-
-            .modal-content {
-                padding: 24px 20px;
-                margin: 20px;
-            }
-
-            .favorites-section {
-                padding: 16px;
-                margin-top: 24px;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .header h1 {
-                font-size: 1.75rem;
-            }
-
-            .result-value {
-                font-size: 1.5rem;
-            }
-
-            .card {
-                padding: 16px 12px;
-            }
-
-            .result-actions {
-                flex-direction: column;
-            }
-
-            .btn-icon,
-            .copy-btn,
-            .share-btn {
-                width: 100%;
-            }
+        .history-table tbody tr:hover {
+            background: rgba(255, 215, 0, 0.05);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-top">
-                <div>
-                    <h1>💱 Conversor Pro</h1>
-                    <p>Conversões profissionais e precisas</p>
-                </div>
-                <div class="header-buttons">
-                    <div class="status-indicator" id="statusIndicator">
-                        <div class="status-dot"></div>
-                        <span id="statusText">Online</span>
-                    </div>
-                    <button class="icon-btn" id="themeToggle" title="Alternar tema">🌙</button>
+    <!-- Header -->
+    <div class="header">
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; gap: var(--spacing-sm); position: relative;">
+            <div style="text-align: center;">
+                <h1>⚙️ Hub Pro</h1>
+                <p class="header-subtitle">Calculadoras, Conversores e Geometria - Solução Completa & Integrada</p>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    Online
                 </div>
             </div>
-        </div>
-
-        <div class="card">
-            <div class="tabs" id="tabsContainer">
-                <button class="tab-btn active" onclick="openTab(event, 'moedas')">💱 Moedas</button>
-                <button class="tab-btn" onclick="openTab(event, 'temperatura')">🌡️ Temperatura</button>
-                <button class="tab-btn" onclick="openTab(event, 'comprimento')">📏 Comprimento</button>
-                <button class="tab-btn" onclick="openTab(event, 'massa')">⚖️ Massa</button>
-                <button class="tab-btn" onclick="openTab(event, 'velocidade')">⚡ Velocidade</button>
-                <button class="tab-btn" onclick="openTab(event, 'volume')">🥤 Volume</button>
-                <button class="tab-btn" onclick="openTab(event, 'area')">📐 Área</button>
-            </div>
-
-            <!-- TAB: MOEDAS -->
-            <div id="moedas" class="tab-content active">
-                <div class="error-message" id="moedas-error"></div>
-                <div class="form-group">
-                    <label for="valor_moeda">Valor (BRL)</label>
-                    <input 
-                        type="number" 
-                        id="valor_moeda" 
-                        placeholder="Digite o valor em reais"
-                        step="0.01"
-                        oninput="converterMoeda()"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="para_moeda">Converter para</label>
-                    <select id="para_moeda" onchange="converterMoeda()">
-                        <option value="USD">Dólar Americano (USD)</option>
-                        <option value="EUR">Euro (EUR)</option>
-                        <option value="GBP">Libra Esterlina (GBP)</option>
-                        <option value="JPY">Iene Japonês (JPY)</option>
-                        <option value="CAD">Dólar Canadense (CAD)</option>
-                        <option value="AUD">Dólar Australiano (AUD)</option>
-                        <option value="CHF">Franco Suíço (CHF)</option>
-                        <option value="CNY">Yuan Chinês (CNY)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <div class="label-row">
-                        <label>Casas Decimais</label>
-                        <div class="decimal-selector">
-                            <select id="moedas-decimals" onchange="converterMoeda()">
-                                <option value="2" selected>2</option>
-                                <option value="4">4</option>
-                                <option value="8">8</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-box" id="resultado_moeda" style="display: none;">
-                    <div class="result-label">Resultado da Conversão</div>
-                    <div class="result-value" id="valor_moeda_resultado">0.00</div>
-                    <div class="result-label" style="font-size: 0.8rem; margin-top: 8px;" id="moeda-update">Taxa atualizada</div>
-                    <div class="result-actions">
-                        <button class="copy-btn" onclick="copiar('valor_moeda_resultado')">
-                            📋 Copiar
-                        </button>
-                        <button class="share-btn" onclick="compartilharQR('moeda')">
-                            📤 QR Code
-                        </button>
-                        <button class="btn-icon" onclick="adicionarFavorito('moedas')">
-                            ⭐ Favorito
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: TEMPERATURA -->
-            <div id="temperatura" class="tab-content">
-                <div class="error-message" id="temperatura-error"></div>
-                <div class="form-group">
-                    <label for="temp_valor">Valor da Temperatura</label>
-                    <input 
-                        type="number" 
-                        id="temp_valor" 
-                        placeholder="Digite o valor"
-                        step="0.01"
-                        oninput="converterTemperatura()"
-                    >
-                </div>
-
-                <div class="input-group">
-                    <div class="form-group">
-                        <label for="temp_de">De</label>
-                        <select id="temp_de" onchange="converterTemperatura()">
-                            <option value="C">Celsius (°C)</option>
-                            <option value="F">Fahrenheit (°F)</option>
-                            <option value="K">Kelvin (K)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="temp_para">Para</label>
-                        <select id="temp_para" onchange="converterTemperatura()">
-                            <option value="F">Fahrenheit (°F)</option>
-                            <option value="C">Celsius (°C)</option>
-                            <option value="K">Kelvin (K)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="label-row">
-                        <label>Casas Decimais</label>
-                        <div class="decimal-selector">
-                            <select id="temp-decimals" onchange="converterTemperatura()">
-                                <option value="2" selected>2</option>
-                                <option value="4">4</option>
-                                <option value="8">8</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-box" id="resultado_temperatura" style="display: none;">
-                    <div class="result-label">Resultado da Conversão</div>
-                    <div class="result-value" id="valor_temperatura_resultado">0.00</div>
-                    <div class="result-actions">
-                        <button class="copy-btn" onclick="copiar('valor_temperatura_resultado')">
-                            📋 Copiar
-                        </button>
-                        <button class="share-btn" onclick="compartilharQR('temperatura')">
-                            📤 QR Code
-                        </button>
-                        <button class="btn-icon" onclick="adicionarFavorito('temperatura')">
-                            ⭐ Favorito
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: COMPRIMENTO -->
-            <div id="comprimento" class="tab-content">
-                <div class="error-message" id="comprimento-error"></div>
-                <div class="form-group">
-                    <label for="comp_valor">Valor</label>
-                    <input 
-                        type="number" 
-                        id="comp_valor" 
-                        placeholder="Digite o valor"
-                        step="0.01"
-                        oninput="converterComprimento()"
-                    >
-                </div>
-
-                <div class="input-group">
-                    <div class="form-group">
-                        <label for="comp_de">De</label>
-                        <select id="comp_de" onchange="converterComprimento()">
-                            <option value="m">Metro (m)</option>
-                            <option value="km">Quilômetro (km)</option>
-                            <option value="cm">Centímetro (cm)</option>
-                            <option value="mm">Milímetro (mm)</option>
-                            <option value="in">Polegada (in)</option>
-                            <option value="ft">Pé (ft)</option>
-                            <option value="yd">Jarda (yd)</option>
-                            <option value="mi">Milha (mi)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="comp_para">Para</label>
-                        <select id="comp_para" onchange="converterComprimento()">
-                            <option value="m">Metro (m)</option>
-                            <option value="km">Quilômetro (km)</option>
-                            <option value="cm">Centímetro (cm)</option>
-                            <option value="mm">Milímetro (mm)</option>
-                            <option value="in">Polegada (in)</option>
-                            <option value="ft">Pé (ft)</option>
-                            <option value="yd">Jarda (yd)</option>
-                            <option value="mi">Milha (mi)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="label-row">
-                        <label>Casas Decimais</label>
-                        <div class="decimal-selector">
-                            <select id="comp-decimals" onchange="converterComprimento()">
-                                <option value="4" selected>4</option>
-                                <option value="2">2</option>
-                                <option value="8">8</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-box" id="resultado_comprimento" style="display: none;">
-                    <div class="result-label">Resultado da Conversão</div>
-                    <div class="result-value" id="valor_comprimento_resultado">0.00</div>
-                    <div class="result-actions">
-                        <button class="copy-btn" onclick="copiar('valor_comprimento_resultado')">
-                            📋 Copiar
-                        </button>
-                        <button class="share-btn" onclick="compartilharQR('comprimento')">
-                            📤 QR Code
-                        </button>
-                        <button class="btn-icon" onclick="adicionarFavorito('comprimento')">
-                            ⭐ Favorito
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: MASSA -->
-            <div id="massa" class="tab-content">
-                <div class="error-message" id="massa-error"></div>
-                <div class="form-group">
-                    <label for="massa_valor">Valor</label>
-                    <input 
-                        type="number" 
-                        id="massa_valor" 
-                        placeholder="Digite o valor"
-                        step="0.01"
-                        oninput="converterMassa()"
-                    >
-                </div>
-
-                <div class="input-group">
-                    <div class="form-group">
-                        <label for="massa_de">De</label>
-                        <select id="massa_de" onchange="converterMassa()">
-                            <option value="kg">Quilograma (kg)</option>
-                            <option value="g">Grama (g)</option>
-                            <option value="mg">Miligrama (mg)</option>
-                            <option value="lb">Libra (lb)</option>
-                            <option value="oz">Onça (oz)</option>
-                            <option value="ton">Tonelada Métrica (ton)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="massa_para">Para</label>
-                        <select id="massa_para" onchange="converterMassa()">
-                            <option value="kg">Quilograma (kg)</option>
-                            <option value="g">Grama (g)</option>
-                            <option value="mg">Miligrama (mg)</option>
-                            <option value="lb">Libra (lb)</option>
-                            <option value="oz">Onça (oz)</option>
-                            <option value="ton">Tonelada Métrica (ton)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="label-row">
-                        <label>Casas Decimais</label>
-                        <div class="decimal-selector">
-                            <select id="massa-decimals" onchange="converterMassa()">
-                                <option value="4" selected>4</option>
-                                <option value="2">2</option>
-                                <option value="8">8</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-box" id="resultado_massa" style="display: none;">
-                    <div class="result-label">Resultado da Conversão</div>
-                    <div class="result-value" id="valor_massa_resultado">0.00</div>
-                    <div class="result-actions">
-                        <button class="copy-btn" onclick="copiar('valor_massa_resultado')">
-                            📋 Copiar
-                        </button>
-                        <button class="share-btn" onclick="compartilharQR('massa')">
-                            📤 QR Code
-                        </button>
-                        <button class="btn-icon" onclick="adicionarFavorito('massa')">
-                            ⭐ Favorito
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: VELOCIDADE -->
-            <div id="velocidade" class="tab-content">
-                <div class="error-message" id="velocidade-error"></div>
-                <div class="form-group">
-                    <label for="vel_valor">Valor</label>
-                    <input 
-                        type="number" 
-                        id="vel_valor" 
-                        placeholder="Digite o valor"
-                        step="0.01"
-                        oninput="converterVelocidade()"
-                    >
-                </div>
-
-                <div class="input-group">
-                    <div class="form-group">
-                        <label for="vel_de">De</label>
-                        <select id="vel_de" onchange="converterVelocidade()">
-                            <option value="kmh">Quilômetro/hora (km/h)</option>
-                            <option value="ms">Metro/segundo (m/s)</option>
-                            <option value="mph">Milha/hora (mph)</option>
-                            <option value="knot">Nó (knot)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="vel_para">Para</label>
-                        <select id="vel_para" onchange="converterVelocidade()">
-                            <option value="kmh">Quilômetro/hora (km/h)</option>
-                            <option value="ms">Metro/segundo (m/s)</option>
-                            <option value="mph">Milha/hora (mph)</option>
-                            <option value="knot">Nó (knot)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="label-row">
-                        <label>Casas Decimais</label>
-                        <div class="decimal-selector">
-                            <select id="vel-decimals" onchange="converterVelocidade()">
-                                <option value="2" selected>2</option>
-                                <option value="4">4</option>
-                                <option value="8">8</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-box" id="resultado_velocidade" style="display: none;">
-                    <div class="result-label">Resultado da Conversão</div>
-                    <div class="result-value" id="valor_velocidade_resultado">0.00</div>
-                    <div class="result-actions">
-                        <button class="copy-btn" onclick="copiar('valor_velocidade_resultado')">
-                            📋 Copiar
-                        </button>
-                        <button class="share-btn" onclick="compartilharQR('velocidade')">
-                            📤 QR Code
-                        </button>
-                        <button class="btn-icon" onclick="adicionarFavorito('velocidade')">
-                            ⭐ Favorito
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: VOLUME -->
-            <div id="volume" class="tab-content">
-                <div class="error-message" id="volume-error"></div>
-                <div class="form-group">
-                    <label for="vol_valor">Valor</label>
-                    <input 
-                        type="number" 
-                        id="vol_valor" 
-                        placeholder="Digite o valor"
-                        step="0.01"
-                        oninput="converterVolume()"
-                    >
-                </div>
-
-                <div class="input-group">
-                    <div class="form-group">
-                        <label for="vol_de">De</label>
-                        <select id="vol_de" onchange="converterVolume()">
-                            <option value="L">Litro (L)</option>
-                            <option value="mL">Mililitro (mL)</option>
-                            <option value="gal">Galão Americano (gal)</option>
-                            <option value="pt">Pinta (pt)</option>
-                            <option value="cup">Xícara (cup)</option>
-                            <option value="tbsp">Colher de sopa (tbsp)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="vol_para">Para</label>
-                        <select id="vol_para" onchange="converterVolume()">
-                            <option value="L">Litro (L)</option>
-                            <option value="mL">Mililitro (mL)</option>
-                            <option value="gal">Galão Americano (gal)</option>
-                            <option value="pt">Pinta (pt)</option>
-                            <option value="cup">Xícara (cup)</option>
-                            <option value="tbsp">Colher de sopa (tbsp)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="label-row">
-                        <label>Casas Decimais</label>
-                        <div class="decimal-selector">
-                            <select id="vol-decimals" onchange="converterVolume()">
-                                <option value="4" selected>4</option>
-                                <option value="2">2</option>
-                                <option value="8">8</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-box" id="resultado_volume" style="display: none;">
-                    <div class="result-label">Resultado da Conversão</div>
-                    <div class="result-value" id="valor_volume_resultado">0.00</div>
-                    <div class="result-actions">
-                        <button class="copy-btn" onclick="copiar('valor_volume_resultado')">
-                            📋 Copiar
-                        </button>
-                        <button class="share-btn" onclick="compartilharQR('volume')">
-                            📤 QR Code
-                        </button>
-                        <button class="btn-icon" onclick="adicionarFavorito('volume')">
-                            ⭐ Favorito
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: ÁREA -->
-            <div id="area" class="tab-content">
-                <div class="error-message" id="area-error"></div>
-                <div class="form-group">
-                    <label for="area_valor">Valor</label>
-                    <input 
-                        type="number" 
-                        id="area_valor" 
-                        placeholder="Digite o valor"
-                        step="0.01"
-                        oninput="converterArea()"
-                    >
-                </div>
-
-                <div class="input-group">
-                    <div class="form-group">
-                        <label for="area_de">De</label>
-                        <select id="area_de" onchange="converterArea()">
-                            <option value="m2">Metro Quadrado (m²)</option>
-                            <option value="km2">Quilômetro Quadrado (km²)</option>
-                            <option value="cm2">Centímetro Quadrado (cm²)</option>
-                            <option value="ft2">Pé Quadrado (ft²)</option>
-                            <option value="in2">Polegada Quadrada (in²)</option>
-                            <option value="hectare">Hectare (ha)</option>
-                            <option value="acre">Acre</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="area_para">Para</label>
-                        <select id="area_para" onchange="converterArea()">
-                            <option value="m2">Metro Quadrado (m²)</option>
-                            <option value="km2">Quilômetro Quadrado (km²)</option>
-                            <option value="cm2">Centímetro Quadrado (cm²)</option>
-                            <option value="ft2">Pé Quadrado (ft²)</option>
-                            <option value="in2">Polegada Quadrada (in²)</option>
-                            <option value="hectare">Hectare (ha)</option>
-                            <option value="acre">Acre</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="label-row">
-                        <label>Casas Decimais</label>
-                        <div class="decimal-selector">
-                            <select id="area-decimals" onchange="converterArea()">
-                                <option value="4" selected>4</option>
-                                <option value="2">2</option>
-                                <option value="8">8</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-box" id="resultado_area" style="display: none;">
-                    <div class="result-label">Resultado da Conversão</div>
-                    <div class="result-value" id="valor_area_resultado">0.00</div>
-                    <div class="result-actions">
-                        <button class="copy-btn" onclick="copiar('valor_area_resultado')">
-                            📋 Copiar
-                        </button>
-                        <button class="share-btn" onclick="compartilharQR('area')">
-                            📤 QR Code
-                        </button>
-                        <button class="btn-icon" onclick="adicionarFavorito('area')">
-                            ⭐ Favorito
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="favorites-section" id="favoritesSection" style="display: none;">
-                <div class="favorites-title">⭐ Suas Conversões Favoritas</div>
-                <div id="favoritesList"></div>
-            </div>
+            <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Alternar Tema">🌙</button>
         </div>
     </div>
 
-    <!-- Modal QR Code -->
-    <div id="qrModal" class="modal">
-        <div class="modal-content">
+    <!-- QR Modal -->
+    <div id="qrModal" class="qr-modal">
+        <div class="qr-modal-content">
             <h3>Compartilhe via QR Code</h3>
-            <div class="qr-code" id="qrContainer"></div>
-            <button class="btn btn-primary" onclick="fecharQR()">Fechar</button>
+            <div id="qrCode" class="qr-code"></div>
+            <p id="qrText" style="font-size: 12px; color: var(--color-text-light);"></p>
+            <button class="qr-close" onclick="closeQRModal()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-title">Calculadoras</div>
+            <button class="nav-button active" onclick="switchSection('combustivel')">⛽ Combustível</button>
+            <button class="nav-button" onclick="switchSection('geometrica')">📐 Geometria</button>
+
+            <div class="sidebar-title" style="margin-top: var(--spacing-lg);">Conversores</div>
+            <button class="nav-button" onclick="switchSection('moedas')">💱 Moedas</button>
+            <button class="nav-button" onclick="switchSection('temperatura')">🌡️ Temperatura</button>
+            <button class="nav-button" onclick="switchSection('comprimento')">📏 Comprimento</button>
+            <button class="nav-button" onclick="switchSection('massa')">⚖️ Massa</button>
+            <button class="nav-button" onclick="switchSection('velocidade')">⚡ Velocidade</button>
+            <button class="nav-button" onclick="switchSection('volume')">🥤 Volume</button>
+            <button class="nav-button" onclick="switchSection('area')">📐 Área</button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+
+            <!-- COMBUSTÍVEL -->
+            <div id="combustivel" class="section active">
+                <h2 class="section-title">⛽ Calculadora de Combustível</h2>
+
+                <div class="subsection">
+                    <div class="subsection-title">Dados da Viagem</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Quilometragem Total (km)</label>
+                            <input type="number" id="distancia" placeholder="Ex: 500" step="0.1" min="0">
+                            <div class="input-feedback" id="distanciaFeedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Consumo do Veículo (km/L)</label>
+                            <input type="number" id="consumo" placeholder="Ex: 12.5" step="0.1" min="0">
+                            <div class="input-feedback" id="consumoFeedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Preço do Combustível (R$/L)</label>
+                            <input type="number" id="precoCombustivel" placeholder="Ex: 6.50" step="0.01" min="0">
+                            <div class="input-feedback" id="precoFeedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Combustível</label>
+                            <select id="tipoCombustivel">
+                                <option value="Gasolina">Gasolina</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="Etanol">Etanol</option>
+                                <option value="Gás">Gás Natural</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="calcularCombustivel()">🔢 Calcular</button>
+                        <button class="btn btn-danger" onclick="limparCombustivel()">🗑️ Limpar</button>
+                    </div>
+                </div>
+
+                <div id="resultadoCombustivel" class="result-box">
+                    <button class="print-btn" onclick="exportarPDF('combustivel')">📄 PDF</button>
+                    <button class="copy-btn" onclick="copiarResultado('resultadoCombustivel')">📋 Copiar</button>
+                    <div class="result-label">Resultado da Viagem</div>
+                    <div class="result-value" id="valorResultado">0.00</div>
+                    <div class="result-subtitle" id="detalhesResultado"></div>
+                </div>
+
+                <div id="historicoCombustivel" class="history-section">
+                    <h3 style="margin-bottom: var(--spacing-md); font-size: 14px;">📋 Últimos Cálculos</h3>
+                    <div id="historicoListaCombustivel" class="history-list"></div>
+                </div>
+            </div>
+
+            <!-- GEOMETRIA -->
+            <div id="geometrica" class="section">
+                <h2 class="section-title">📐 Calculadora Geométrica</h2>
+
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('figuras2d')">Figuras 2D</button>
+                    <button class="tab-button" onclick="switchTab('figuras3d')">Figuras 3D</button>
+                </div>
+
+                <!-- FIGURAS 2D -->
+                <div id="figuras2d" class="tab-content active">
+                    <div class="subsection">
+                        <div class="subsection-title">Quadrado</div>
+                        <div class="formula">A = a²</div>
+                        <div class="form-group">
+                            <label>Lado (a)</label>
+                            <input type="number" class="quad-lado" placeholder="Ex: 5" step="0.01">
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularQuadrado()">Calcular</button>
+                        <div class="resultado resultado-quad"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Retângulo</div>
+                        <div class="formula">A = base × altura</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Base</label>
+                                <input type="number" class="ret-base" placeholder="Ex: 10" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Altura</label>
+                                <input type="number" class="ret-altura" placeholder="Ex: 5" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularRetangulo()">Calcular</button>
+                        <div class="resultado resultado-ret"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Triângulo</div>
+                        <div class="formula">A = (base × altura) / 2</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Base</label>
+                                <input type="number" class="tri-base" placeholder="Ex: 8" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Altura</label>
+                                <input type="number" class="tri-altura" placeholder="Ex: 6" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularTriangulo()">Calcular</button>
+                        <div class="resultado resultado-tri"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Círculo</div>
+                        <div class="formula">A = π × r²</div>
+                        <div class="form-group">
+                            <label>Raio (r)</label>
+                            <input type="number" class="circ-raio" placeholder="Ex: 5" step="0.01">
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularCirculo()">Calcular</button>
+                        <div class="resultado resultado-circ"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Trapézio</div>
+                        <div class="formula">A = ((B + b) × h) / 2</div>
+                        <div class="form-grid three-col">
+                            <div class="form-group">
+                                <label>Base Maior (B)</label>
+                                <input type="number" class="trap-basemairor" placeholder="Ex: 10" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Base Menor (b)</label>
+                                <input type="number" class="trap-basemenor" placeholder="Ex: 6" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Altura (h)</label>
+                                <input type="number" class="trap-altura" placeholder="Ex: 4" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularTrapezio()">Calcular</button>
+                        <div class="resultado resultado-trap"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Losango</div>
+                        <div class="formula">A = (D × d) / 2</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Diagonal Maior (D)</label>
+                                <input type="number" class="los-diagmaior" placeholder="Ex: 10" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Diagonal Menor (d)</label>
+                                <input type="number" class="los-diagmenor" placeholder="Ex: 6" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularLosango()">Calcular</button>
+                        <div class="resultado resultado-los"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Elipse</div>
+                        <div class="formula">A = π × a × b</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Semieixo Maior (a)</label>
+                                <input type="number" class="elip-semimaior" placeholder="Ex: 8" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Semieixo Menor (b)</label>
+                                <input type="number" class="elip-semimenor" placeholder="Ex: 5" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularElipse()">Calcular</button>
+                        <div class="resultado resultado-elip"></div>
+                    </div>
+                </div>
+
+                <!-- FIGURAS 3D -->
+                <div id="figuras3d" class="tab-content">
+                    <div class="subsection">
+                        <div class="subsection-title">Cubo</div>
+                        <div class="formula">V = a³</div>
+                        <div class="form-group">
+                            <label>Aresta (a)</label>
+                            <input type="number" class="cubo-aresta" placeholder="Ex: 5" step="0.01">
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularCubo()">Calcular</button>
+                        <div class="resultado resultado-cubo"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Paralelepípedo</div>
+                        <div class="formula">V = comp × larg × alt</div>
+                        <div class="form-grid three-col">
+                            <div class="form-group">
+                                <label>Comprimento</label>
+                                <input type="number" class="para-comp" placeholder="Ex: 10" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Largura</label>
+                                <input type="number" class="para-larg" placeholder="Ex: 8" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Altura</label>
+                                <input type="number" class="para-alt" placeholder="Ex: 5" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularParalelepipedo()">Calcular</button>
+                        <div class="resultado resultado-para"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Cilindro</div>
+                        <div class="formula">V = π × r² × h</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Raio (r)</label>
+                                <input type="number" class="cil-raio" placeholder="Ex: 4" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Altura (h)</label>
+                                <input type="number" class="cil-alt" placeholder="Ex: 10" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularCilindro()">Calcular</button>
+                        <div class="resultado resultado-cil"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Cone</div>
+                        <div class="formula">V = (π × r² × h) / 3</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Raio (r)</label>
+                                <input type="number" class="cone-raio" placeholder="Ex: 4" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Altura (h)</label>
+                                <input type="number" class="cone-alt" placeholder="Ex: 10" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularCone()">Calcular</button>
+                        <div class="resultado resultado-cone"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Esfera</div>
+                        <div class="formula">V = (4/3) × π × r³</div>
+                        <div class="form-group">
+                            <label>Raio (r)</label>
+                            <input type="number" class="esf-raio" placeholder="Ex: 5" step="0.01">
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularEsfera()">Calcular</button>
+                        <div class="resultado resultado-esf"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Pirâmide (Base Quadrada)</div>
+                        <div class="formula">V = (l² × h) / 3</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Lado da Base (l)</label>
+                                <input type="number" class="pir-lado" placeholder="Ex: 6" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Altura (h)</label>
+                                <input type="number" class="pir-alt" placeholder="Ex: 8" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularPiramide()">Calcular</button>
+                        <div class="resultado resultado-pir"></div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Prisma Triangular</div>
+                        <div class="formula">V = Ab × h (onde Ab = base × alt / 2)</div>
+                        <div class="form-grid three-col">
+                            <div class="form-group">
+                                <label>Base do Triângulo (b)</label>
+                                <input type="number" class="prist-base" placeholder="Ex: 5" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Altura do Triângulo (ht)</label>
+                                <input type="number" class="prist-altt" placeholder="Ex: 4" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Altura do Prisma (hp)</label>
+                                <input type="number" class="prist-altp" placeholder="Ex: 10" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calcularPrismaTriangular()">Calcular</button>
+                        <div class="resultado resultado-prist"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOEDAS -->
+            <div id="moedas" class="section">
+                <h2 class="section-title">💱 Conversor de Moedas</h2>
+                <div class="subsection">
+                    <div class="decimal-selector">
+                        <label>Casas Decimais:</label>
+                        <select id="moedaDecimal" onchange="atualizarMoeda()">
+                            <option value="2">2 casas</option>
+                            <option value="4">4 casas</option>
+                            <option value="8">8 casas</option>
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Valor (BRL)</label>
+                            <input type="number" id="valorMoeda" placeholder="0.00" step="0.01" onchange="atualizarMoeda()">
+                        </div>
+                        <div class="form-group">
+                            <label>Converter para:</label>
+                            <select id="moedaDestino" onchange="atualizarMoeda()">
+                                <option value="1">USD - Dólar Americano (1)</option>
+                                <option value="0.92">EUR - Euro (0.92)</option>
+                                <option value="0.79">GBP - Libra (0.79)</option>
+                                <option value="155">JPY - Iene (155)</option>
+                                <option value="1.36">CAD - Dólar Canadense (1.36)</option>
+                                <option value="1.54">AUD - Dólar Australiano (1.54)</option>
+                                <option value="0.88">CHF - Franco (0.88)</option>
+                                <option value="7.25">CNY - Yuan (7.25)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="converterMoeda()">Converter</button>
+                        <button class="favorite-btn" id="favMoedas" onclick="toggleFavorite('moedas')">⭐ Favorito</button>
+                        <button class="btn btn-secondary" onclick="gerarQRCode('moedas')">📤 QR Code</button>
+                    </div>
+                    <div id="resultadoMoeda" class="result-box"></div>
+                </div>
+            </div>
+
+            <!-- TEMPERATURA -->
+            <div id="temperatura" class="section">
+                <h2 class="section-title">🌡️ Conversor de Temperatura</h2>
+                <div class="subsection">
+                    <div class="decimal-selector">
+                        <label>Casas Decimais:</label>
+                        <select id="tempDecimal" onchange="atualizarTemp()">
+                            <option value="2">2 casas</option>
+                            <option value="4">4 casas</option>
+                            <option value="8">8 casas</option>
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Valor</label>
+                            <input type="number" id="valorTemp" placeholder="0" step="0.01" onchange="atualizarTemp()">
+                        </div>
+                        <div class="form-group">
+                            <label>De</label>
+                            <select id="tempDe" onchange="atualizarTemp()">
+                                <option value="C">Celsius (°C)</option>
+                                <option value="F">Fahrenheit (°F)</option>
+                                <option value="K">Kelvin (K)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Para</label>
+                            <select id="tempPara" onchange="atualizarTemp()">
+                                <option value="C">Celsius (°C)</option>
+                                <option value="F">Fahrenheit (°F)</option>
+                                <option value="K">Kelvin (K)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="converterTemperatura()">Converter</button>
+                        <button class="favorite-btn" id="favTemp" onclick="toggleFavorite('temperatura')">⭐ Favorito</button>
+                        <button class="btn btn-secondary" onclick="gerarQRCode('temperatura')">📤 QR Code</button>
+                    </div>
+                    <div id="resultadoTemp" class="result-box"></div>
+                </div>
+            </div>
+
+            <!-- COMPRIMENTO -->
+            <div id="comprimento" class="section">
+                <h2 class="section-title">📏 Conversor de Comprimento</h2>
+                <div class="subsection">
+                    <div class="decimal-selector">
+                        <label>Casas Decimais:</label>
+                        <select id="compDecimal" onchange="atualizarComp()">
+                            <option value="4">4 casas</option>
+                            <option value="2">2 casas</option>
+                            <option value="8">8 casas</option>
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Valor</label>
+                            <input type="number" id="valorComp" placeholder="0" step="0.01" onchange="atualizarComp()">
+                        </div>
+                        <div class="form-group">
+                            <label>De</label>
+                            <select id="compDe" onchange="atualizarComp()">
+                                <option value="m">Metro (m)</option>
+                                <option value="km">Quilômetro (km)</option>
+                                <option value="cm">Centímetro (cm)</option>
+                                <option value="mm">Milímetro (mm)</option>
+                                <option value="in">Polegada (in)</option>
+                                <option value="ft">Pé (ft)</option>
+                                <option value="yd">Jarda (yd)</option>
+                                <option value="mi">Milha (mi)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Para</label>
+                            <select id="compPara" onchange="atualizarComp()">
+                                <option value="m">Metro (m)</option>
+                                <option value="km">Quilômetro (km)</option>
+                                <option value="cm">Centímetro (cm)</option>
+                                <option value="mm">Milímetro (mm)</option>
+                                <option value="in">Polegada (in)</option>
+                                <option value="ft">Pé (ft)</option>
+                                <option value="yd">Jarda (yd)</option>
+                                <option value="mi">Milha (mi)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="converterComprimento()">Converter</button>
+                        <button class="favorite-btn" id="favComp" onclick="toggleFavorite('comprimento')">⭐ Favorito</button>
+                        <button class="btn btn-secondary" onclick="gerarQRCode('comprimento')">📤 QR Code</button>
+                    </div>
+                    <div id="resultadoComp" class="result-box"></div>
+                </div>
+            </div>
+
+            <!-- MASSA -->
+            <div id="massa" class="section">
+                <h2 class="section-title">⚖️ Conversor de Massa</h2>
+                <div class="subsection">
+                    <div class="decimal-selector">
+                        <label>Casas Decimais:</label>
+                        <select id="massaDecimal" onchange="atualizarMassa()">
+                            <option value="4">4 casas</option>
+                            <option value="2">2 casas</option>
+                            <option value="8">8 casas</option>
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Valor</label>
+                            <input type="number" id="valorMassa" placeholder="0" step="0.01" onchange="atualizarMassa()">
+                        </div>
+                        <div class="form-group">
+                            <label>De</label>
+                            <select id="massaDe" onchange="atualizarMassa()">
+                                <option value="kg">Quilograma (kg)</option>
+                                <option value="g">Grama (g)</option>
+                                <option value="mg">Miligrama (mg)</option>
+                                <option value="lb">Libra (lb)</option>
+                                <option value="oz">Onça (oz)</option>
+                                <option value="ton">Tonelada Métrica (ton)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Para</label>
+                            <select id="massaPara" onchange="atualizarMassa()">
+                                <option value="kg">Quilograma (kg)</option>
+                                <option value="g">Grama (g)</option>
+                                <option value="mg">Miligrama (mg)</option>
+                                <option value="lb">Libra (lb)</option>
+                                <option value="oz">Onça (oz)</option>
+                                <option value="ton">Tonelada Métrica (ton)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="converterMassa()">Converter</button>
+                        <button class="favorite-btn" id="favMassa" onclick="toggleFavorite('massa')">⭐ Favorito</button>
+                        <button class="btn btn-secondary" onclick="gerarQRCode('massa')">📤 QR Code</button>
+                    </div>
+                    <div id="resultadoMassa" class="result-box"></div>
+                </div>
+            </div>
+
+            <!-- VELOCIDADE -->
+            <div id="velocidade" class="section">
+                <h2 class="section-title">⚡ Conversor de Velocidade</h2>
+                <div class="subsection">
+                    <div class="decimal-selector">
+                        <label>Casas Decimais:</label>
+                        <select id="velDecimal" onchange="atualizarVel()">
+                            <option value="2">2 casas</option>
+                            <option value="4">4 casas</option>
+                            <option value="8">8 casas</option>
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Valor</label>
+                            <input type="number" id="valorVel" placeholder="0" step="0.01" onchange="atualizarVel()">
+                        </div>
+                        <div class="form-group">
+                            <label>De</label>
+                            <select id="velDe" onchange="atualizarVel()">
+                                <option value="kmh">Quilômetro/hora (km/h)</option>
+                                <option value="ms">Metro/segundo (m/s)</option>
+                                <option value="mph">Milha/hora (mph)</option>
+                                <option value="knot">Nó (knot)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Para</label>
+                            <select id="velPara" onchange="atualizarVel()">
+                                <option value="kmh">Quilômetro/hora (km/h)</option>
+                                <option value="ms">Metro/segundo (m/s)</option>
+                                <option value="mph">Milha/hora (mph)</option>
+                                <option value="knot">Nó (knot)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="converterVelocidade()">Converter</button>
+                        <button class="favorite-btn" id="favVel" onclick="toggleFavorite('velocidade')">⭐ Favorito</button>
+                        <button class="btn btn-secondary" onclick="gerarQRCode('velocidade')">📤 QR Code</button>
+                    </div>
+                    <div id="resultadoVel" class="result-box"></div>
+                </div>
+            </div>
+
+            <!-- VOLUME -->
+            <div id="volume" class="section">
+                <h2 class="section-title">🥤 Conversor de Volume</h2>
+                <div class="subsection">
+                    <div class="decimal-selector">
+                        <label>Casas Decimais:</label>
+                        <select id="volDecimal" onchange="atualizarVol()">
+                            <option value="4">4 casas</option>
+                            <option value="2">2 casas</option>
+                            <option value="8">8 casas</option>
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Valor</label>
+                            <input type="number" id="valorVol" placeholder="0" step="0.01" onchange="atualizarVol()">
+                        </div>
+                        <div class="form-group">
+                            <label>De</label>
+                            <select id="volDe" onchange="atualizarVol()">
+                                <option value="L">Litro (L)</option>
+                                <option value="mL">Mililitro (mL)</option>
+                                <option value="gal">Galão Americano (gal)</option>
+                                <option value="pt">Pinta (pt)</option>
+                                <option value="cup">Xícara (cup)</option>
+                                <option value="tbsp">Colher de sopa (tbsp)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Para</label>
+                            <select id="volPara" onchange="atualizarVol()">
+                                <option value="L">Litro (L)</option>
+                                <option value="mL">Mililitro (mL)</option>
+                                <option value="gal">Galão Americano (gal)</option>
+                                <option value="pt">Pinta (pt)</option>
+                                <option value="cup">Xícara (cup)</option>
+                                <option value="tbsp">Colher de sopa (tbsp)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="converterVolume()">Converter</button>
+                        <button class="favorite-btn" id="favVol" onclick="toggleFavorite('volume')">⭐ Favorito</button>
+                        <button class="btn btn-secondary" onclick="gerarQRCode('volume')">📤 QR Code</button>
+                    </div>
+                    <div id="resultadoVol" class="result-box"></div>
+                </div>
+            </div>
+
+            <!-- ÁREA -->
+            <div id="area" class="section">
+                <h2 class="section-title">📐 Conversor de Área</h2>
+                <div class="subsection">
+                    <div class="decimal-selector">
+                        <label>Casas Decimais:</label>
+                        <select id="areaDecimal" onchange="atualizarArea()">
+                            <option value="4">4 casas</option>
+                            <option value="2">2 casas</option>
+                            <option value="8">8 casas</option>
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Valor</label>
+                            <input type="number" id="valorArea" placeholder="0" step="0.01" onchange="atualizarArea()">
+                        </div>
+                        <div class="form-group">
+                            <label>De</label>
+                            <select id="areaDe" onchange="atualizarArea()">
+                                <option value="m2">Metro Quadrado (m²)</option>
+                                <option value="km2">Quilômetro Quadrado (km²)</option>
+                                <option value="cm2">Centímetro Quadrado (cm²)</option>
+                                <option value="ft2">Pé Quadrado (ft²)</option>
+                                <option value="in2">Polegada Quadrada (in²)</option>
+                                <option value="ha">Hectare (ha)</option>
+                                <option value="acre">Acre (acre)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Para</label>
+                            <select id="areaPara" onchange="atualizarArea()">
+                                <option value="m2">Metro Quadrado (m²)</option>
+                                <option value="km2">Quilômetro Quadrado (km²)</option>
+                                <option value="cm2">Centímetro Quadrado (cm²)</option>
+                                <option value="ft2">Pé Quadrado (ft²)</option>
+                                <option value="in2">Polegada Quadrada (in²)</option>
+                                <option value="ha">Hectare (ha)</option>
+                                <option value="acre">Acre (acre)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="converterArea()">Converter</button>
+                        <button class="favorite-btn" id="favArea" onclick="toggleFavorite('area')">⭐ Favorito</button>
+                        <button class="btn btn-secondary" onclick="gerarQRCode('area')">📤 QR Code</button>
+                    </div>
+                    <div id="resultadoArea" class="result-box"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // Taxas de câmbio em cache
-        let taxasCambio = {
-            USD: 4.95,
-            EUR: 5.35,
-            GBP: 6.20,
-            JPY: 0.032,
-            CAD: 3.55,
-            AUD: 3.25,
-            CHF: 5.60,
-            CNY: 0.68
-        };
-
-        let ultimaAtualizacao = new Date();
-        let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
-
-        // Detectar dark mode automático do sistema
-        function detectarTemaDoSistema() {
-            if (localStorage.getItem('theme')) {
-                return;
-            }
-
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                document.getElementById('themeToggle').textContent = '☀️';
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                document.getElementById('themeToggle').textContent = '🌙';
-            }
-        }
-
-        // Formatador de números profissional
-        function formatarNumero(valor, decimais) {
-            const num = parseFloat(valor);
-            if (isNaN(num)) return '0';
+        // TEMA - DARK/LIGHT MODE
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
             
-            const partes = num.toFixed(decimais).split('.');
-            partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            return partes.join(',');
+            // Detecta o tema atual
+            const currentTheme = body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
+            const newTheme = currentTheme === 'dark-mode' ? 'light-mode' : 'dark-mode';
+            
+            // Remove a classe anterior e adiciona a nova
+            body.classList.remove(currentTheme);
+            body.classList.add(newTheme);
+            
+            // Atualiza o ícone do botão
+            themeToggle.textContent = newTheme === 'dark-mode' ? '☀️' : '🌙';
+            
+            // Salva a preferência no localStorage
+            localStorage.setItem('theme', newTheme);
         }
 
-        // Verificar conexão
-        function atualizarStatus() {
-            const status = navigator.onLine;
-            const indicator = document.getElementById('statusIndicator');
-            const statusText = document.getElementById('statusText');
-            const statusDot = indicator.querySelector('.status-dot');
+        // Carrega o tema salvo ao abrir a página
+        function initializeTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            const savedTheme = localStorage.getItem('theme') || 'light-mode';
+            
+            body.classList.add(savedTheme);
+            themeToggle.textContent = savedTheme === 'dark-mode' ? '☀️' : '🌙';
+        }
 
-            if (status) {
-                statusText.textContent = 'Online';
-                statusDot.classList.remove('offline');
+        // Inicializa o tema ao carregar a página
+        window.addEventListener('DOMContentLoaded', initializeTheme);
+
+        // FUNÇÕES DE NAVEGAÇÃO
+        function switchSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            const buttons = document.querySelectorAll('.nav-button');
+            
+            sections.forEach(s => s.classList.remove('active'));
+            buttons.forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            buttons.forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function mostrarResultado(elementId, valor, unidade = '', detalhes = '') {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                const parent = document.querySelector(elementId);
+                if (parent) {
+                    const resultado = document.createElement('div');
+                    resultado.className = 'result-box show';
+                    resultado.innerHTML = `<div class="result-label">Resultado</div>
+                                          <div class="result-value">${valor.toFixed(2)}</div>
+                                          <div class="result-subtitle">${unidade} ${detalhes}</div>`;
+                    const existing = parent.querySelector('.result-box');
+                    if (existing) existing.remove();
+                    parent.appendChild(resultado);
+                }
             } else {
-                statusText.textContent = 'Offline';
-                statusDot.classList.add('offline');
+                element.classList.add('show');
+                element.querySelector('.result-value').textContent = isNaN(valor) ? '0.00' : valor.toFixed(2);
+                element.querySelector('.result-subtitle').textContent = detalhes;
             }
         }
 
-        window.addEventListener('online', atualizarStatus);
-        window.addEventListener('offline', atualizarStatus);
+        function mostrarResultadoGeo(selector, valor) {
+            const element = document.querySelector(selector);
+            if (element) {
+                const box = element.nextElementSibling;
+                if (box && box.classList.contains('resultado')) {
+                    box.innerHTML = `<div style="background: rgba(33, 150, 243, 0.1); padding: 12px; border-radius: 8px; border-left: 4px solid #2196F3;">
+                                      <div style="font-size: 12px; color: #666;">Resultado</div>
+                                      <div style="font-size: 28px; font-weight: bold; color: #2196F3; margin: 8px 0;">${valor.toFixed(4)}</div>
+                                      <div style="font-size: 13px; color: #666;">unidades</div>
+                                    </div>`;
+                }
+            }
+        }
 
-        // Conversão de Moedas
+        // COMBUSTÍVEL
+        // HISTÓRICO E FAVORITOS
+        let historicoCombustivel = JSON.parse(localStorage.getItem('historicoCombustivel')) || [];
+        let historicoConversoes = JSON.parse(localStorage.getItem('historicoConversoes')) || {};
+
+        function salvarNoHistorico(tipo, dados) {
+            const item = {
+                timestamp: new Date().toLocaleTimeString('pt-BR'),
+                ...dados
+            };
+
+            if (tipo === 'combustivel') {
+                historicoCombustivel.unshift(item);
+                historicoCombustivel = historicoCombustivel.slice(0, 10);
+                localStorage.setItem('historicoCombustivel', JSON.stringify(historicoCombustivel));
+                atualizarHistoricoUI('combustivel');
+            } else {
+                if (!historicoConversoes[tipo]) historicoConversoes[tipo] = [];
+                historicoConversoes[tipo].unshift(item);
+                historicoConversoes[tipo] = historicoConversoes[tipo].slice(0, 5);
+                localStorage.setItem('historicoConversoes', JSON.stringify(historicoConversoes));
+            }
+        }
+
+        function atualizarHistoricoUI(tipo) {
+            if (tipo === 'combustivel' && historicoCombustivel.length > 0) {
+                const container = document.getElementById('historicoCombustivel');
+                const lista = document.getElementById('historicoListaCombustivel');
+                lista.innerHTML = historicoCombustivel.map((item, idx) => `
+                    <button class="history-item-btn" onclick="restaurarCombustivel(${idx})">
+                        <div>💵 R$ ${item.custoTotal.toFixed(2)} - ${item.tipo}</div>
+                        <div class="history-time">${item.timestamp} | ${item.distancia}km | ${item.consumo}km/L</div>
+                    </button>
+                `).join('');
+                container.classList.add('show');
+            }
+        }
+
+        function calcularCombustivel() {
+            const distancia = parseFloat(document.getElementById('distancia').value);
+            const consumo = parseFloat(document.getElementById('consumo').value);
+            const preco = parseFloat(document.getElementById('precoCombustivel').value);
+            const tipo = document.getElementById('tipoCombustivel').value;
+
+            if (!validarCampo(distancia, 'distancia', 'Distância') || 
+                !validarCampo(consumo, 'consumo', 'Consumo') || 
+                !validarCampo(preco, 'precoCombustivel', 'Preço')) {
+                return;
+            }
+
+            const litrosNecessarios = distancia / consumo;
+            const custoTotal = litrosNecessarios * preco;
+
+            document.getElementById('valorResultado').textContent = `R$ ${custoTotal.toFixed(2)}`;
+            document.getElementById('detalhesResultado').textContent = 
+                `${litrosNecessarios.toFixed(2)}L de ${tipo} | R$ ${preco.toFixed(2)}/L`;
+            document.getElementById('resultadoCombustivel').classList.add('show');
+
+            salvarNoHistorico('combustivel', {
+                distancia, consumo, preco, tipo, custoTotal, litrosNecessarios
+            });
+        }
+
+        function limparCombustivel() {
+            document.getElementById('distancia').value = '';
+            document.getElementById('consumo').value = '';
+            document.getElementById('precoCombustivel').value = '';
+            document.getElementById('resultadoCombustivel').classList.remove('show');
+            document.querySelectorAll('#combustivel .input-feedback').forEach(el => el.textContent = '');
+        }
+
+        function restaurarCombustivel(idx) {
+            const item = historicoCombustivel[idx];
+            document.getElementById('distancia').value = item.distancia;
+            document.getElementById('consumo').value = item.consumo;
+            document.getElementById('precoCombustivel').value = item.preco;
+            document.getElementById('tipoCombustivel').value = item.tipo;
+            calcularCombustivel();
+        }
+
+        function validarCampo(valor, idElemento, nomeCampo) {
+            const feedback = document.getElementById(idElemento + 'Feedback');
+            if (isNaN(valor) || valor <= 0) {
+                feedback.textContent = `❌ ${nomeCampo} inválido`;
+                feedback.className = 'input-feedback error';
+                return false;
+            }
+            feedback.textContent = `✓ ${nomeCampo} válido`;
+            feedback.className = 'input-feedback success';
+            return true;
+        }
+
+        function copiarResultado(elementId) {
+            const element = document.getElementById(elementId);
+            const texto = element.querySelector('.result-value').textContent + ' - ' + 
+                         element.querySelector('.result-subtitle').textContent;
+            navigator.clipboard.writeText(texto).then(() => {
+                const btn = element.querySelector('.copy-btn');
+                btn.textContent = '✓ Copiado!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copiar';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function exportarPDF(secao) {
+            const elemento = document.querySelector(`#${secao}`);
+            const resultadoBox = elemento.querySelector('.result-box.show');
+            
+            if (!resultadoBox) {
+                alert('⚠️ Nenhum resultado para exportar!');
+                return;
+            }
+
+            const valor = resultadoBox.querySelector('.result-value').textContent;
+            const detalhes = resultadoBox.querySelector('.result-subtitle').textContent;
+            const titulo = elemento.querySelector('.section-title').textContent;
+            
+            const conteudo = `
+                RELATÓRIO - HUB PROFISSIONAL
+                ========================================
+                ${titulo}
+                
+                Resultado: ${valor}
+                Detalhes: ${detalhes}
+                
+                Data: ${new Date().toLocaleString('pt-BR')}
+                ========================================
+            `;
+
+            const blob = new Blob([conteudo], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio-${secao}-${new Date().getTime()}.txt`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // GEOMETRIA - 2D
+        function calcularQuadrado() {
+            const lado = parseFloat(document.querySelector('.quad-lado').value);
+            if (!lado) { alert('Preencha o lado!'); return; }
+            const area = lado * lado;
+            mostrarResultadoGeo('.quad-lado', area);
+        }
+
+        function calcularRetangulo() {
+            const base = parseFloat(document.querySelector('.ret-base').value);
+            const altura = parseFloat(document.querySelector('.ret-altura').value);
+            if (!base || !altura) { alert('Preencha base e altura!'); return; }
+            const area = base * altura;
+            mostrarResultadoGeo('.ret-base', area);
+        }
+
+        function calcularTriangulo() {
+            const base = parseFloat(document.querySelector('.tri-base').value);
+            const altura = parseFloat(document.querySelector('.tri-altura').value);
+            if (!base || !altura) { alert('Preencha base e altura!'); return; }
+            const area = (base * altura) / 2;
+            mostrarResultadoGeo('.tri-base', area);
+        }
+
+        function calcularCirculo() {
+            const raio = parseFloat(document.querySelector('.circ-raio').value);
+            if (!raio) { alert('Preencha o raio!'); return; }
+            const area = Math.PI * raio * raio;
+            mostrarResultadoGeo('.circ-raio', area);
+        }
+
+        function calcularTrapezio() {
+            const bmaior = parseFloat(document.querySelector('.trap-basemairor').value);
+            const bmenor = parseFloat(document.querySelector('.trap-basemenor').value);
+            const altura = parseFloat(document.querySelector('.trap-altura').value);
+            if (!bmaior || !bmenor || !altura) { alert('Preencha todos os campos!'); return; }
+            const area = ((bmaior + bmenor) * altura) / 2;
+            mostrarResultadoGeo('.trap-basemairor', area);
+        }
+
+        function calcularLosango() {
+            const dmaior = parseFloat(document.querySelector('.los-diagmaior').value);
+            const dmenor = parseFloat(document.querySelector('.los-diagmenor').value);
+            if (!dmaior || !dmenor) { alert('Preencha as diagonais!'); return; }
+            const area = (dmaior * dmenor) / 2;
+            mostrarResultadoGeo('.los-diagmaior', area);
+        }
+
+        function calcularElipse() {
+            const semaior = parseFloat(document.querySelector('.elip-semimaior').value);
+            const semenor = parseFloat(document.querySelector('.elip-semimenor').value);
+            if (!semaior || !semenor) { alert('Preencha os semieixos!'); return; }
+            const area = Math.PI * semaior * semenor;
+            mostrarResultadoGeo('.elip-semimaior', area);
+        }
+
+        // GEOMETRIA - 3D
+        function calcularCubo() {
+            const aresta = parseFloat(document.querySelector('.cubo-aresta').value);
+            if (!aresta) { alert('Preencha a aresta!'); return; }
+            const volume = aresta * aresta * aresta;
+            mostrarResultadoGeo('.cubo-aresta', volume);
+        }
+
+        function calcularParalelepipedo() {
+            const comp = parseFloat(document.querySelector('.para-comp').value);
+            const larg = parseFloat(document.querySelector('.para-larg').value);
+            const alt = parseFloat(document.querySelector('.para-alt').value);
+            if (!comp || !larg || !alt) { alert('Preencha todos os campos!'); return; }
+            const volume = comp * larg * alt;
+            mostrarResultadoGeo('.para-comp', volume);
+        }
+
+        function calcularCilindro() {
+            const raio = parseFloat(document.querySelector('.cil-raio').value);
+            const alt = parseFloat(document.querySelector('.cil-alt').value);
+            if (!raio || !alt) { alert('Preencha raio e altura!'); return; }
+            const volume = Math.PI * raio * raio * alt;
+            mostrarResultadoGeo('.cil-raio', volume);
+        }
+
+        function calcularCone() {
+            const raio = parseFloat(document.querySelector('.cone-raio').value);
+            const alt = parseFloat(document.querySelector('.cone-alt').value);
+            if (!raio || !alt) { alert('Preencha raio e altura!'); return; }
+            const volume = (Math.PI * raio * raio * alt) / 3;
+            mostrarResultadoGeo('.cone-raio', volume);
+        }
+
+        function calcularEsfera() {
+            const raio = parseFloat(document.querySelector('.esf-raio').value);
+            if (!raio) { alert('Preencha o raio!'); return; }
+            const volume = (4/3) * Math.PI * raio * raio * raio;
+            mostrarResultadoGeo('.esf-raio', volume);
+        }
+
+        function calcularPiramide() {
+            const lado = parseFloat(document.querySelector('.pir-lado').value);
+            const alt = parseFloat(document.querySelector('.pir-alt').value);
+            if (!lado || !alt) { alert('Preencha lado e altura!'); return; }
+            const volume = (lado * lado * alt) / 3;
+            mostrarResultadoGeo('.pir-lado', volume);
+        }
+
+        function calcularPrismaTriangular() {
+            const base = parseFloat(document.querySelector('.prist-base').value);
+            const altt = parseFloat(document.querySelector('.prist-altt').value);
+            const altp = parseFloat(document.querySelector('.prist-altp').value);
+            if (!base || !altt || !altp) { alert('Preencha todos os campos!'); return; }
+            const areaBase = (base * altt) / 2;
+            const volume = areaBase * altp;
+            mostrarResultadoGeo('.prist-base', volume);
+        }
+
+        // CONVERSORES
+
         function converterMoeda() {
-            const valor = parseFloat(document.getElementById('valor_moeda').value);
-            const para = document.getElementById('para_moeda').value;
-            const decimals = document.getElementById('moedas-decimals').value;
-            const resultado = document.getElementById('resultado_moeda');
-            const errorDiv = document.getElementById('moedas-error');
-
-            errorDiv.classList.remove('show');
-
-            if (!valor || valor < 0) {
-                resultado.style.display = 'none';
+            const valor = parseFloat(document.getElementById('valorMoeda').value);
+            const selectElement = document.getElementById('moedaDestino');
+            const taxa = parseFloat(selectElement.options[selectElement.selectedIndex].value.split(' - ')[0]);
+            const moeda = selectElement.options[selectElement.selectedIndex].text.split(' - ')[0];
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
                 return;
             }
+            
+            const resultado = valor * taxa;
+            document.getElementById('resultadoMoeda').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoMoeda')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(2)}</div>
+                 <div class="result-subtitle">R$ ${valor.toFixed(2)} = ${resultado.toFixed(2)} ${moeda}</div>`;
+            document.getElementById('resultadoMoeda').classList.add('show');
 
-            if (valor > 999999999) {
-                mostrarErro('moedas-error', '❌ Valor muito alto para conversão');
-                resultado.style.display = 'none';
-                return;
-            }
-
-            const valorConvertido = (valor / taxasCambio[para]).toFixed(decimals);
-            const valorFormatado = formatarNumero(valorConvertido, decimals);
-            document.getElementById('valor_moeda_resultado').textContent = `${valorFormatado} ${para}`;
-            resultado.style.display = 'block';
+            salvarNoHistorico('moedas', { valor, taxa, moeda, resultado });
         }
 
-        // Conversão de Temperatura
+        // SUPORTE ENTER EM TODOS OS CONVERSORES
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                const activeElement = document.activeElement;
+                if (activeElement.id.startsWith('valor')) {
+                    event.preventDefault();
+                    const sectionId = document.querySelector('.section.active').id;
+                    const converterFunc = {
+                        'moedas': converterMoeda,
+                        'temperatura': converterTemperatura,
+                        'comprimento': converterComprimento,
+                        'massa': converterMassa,
+                        'velocidade': converterVelocidade,
+                        'volume': converterVolume,
+                        'area': converterArea,
+                        'combustivel': calcularCombustivel
+                    }[sectionId];
+                    if (converterFunc) converterFunc();
+                }
+            }
+        });
+
         function converterTemperatura() {
-            const valor = parseFloat(document.getElementById('temp_valor').value);
-            const de = document.getElementById('temp_de').value;
-            const para = document.getElementById('temp_para').value;
-            const decimals = document.getElementById('temp-decimals').value;
-            const resultado = document.getElementById('resultado_temperatura');
-            const errorDiv = document.getElementById('temperatura-error');
-
-            errorDiv.classList.remove('show');
-
+            const valor = parseFloat(document.getElementById('valorTemp').value);
+            const de = document.getElementById('tempDe').value;
+            const para = document.getElementById('tempPara').value;
+            
             if (isNaN(valor)) {
-                resultado.style.display = 'none';
+                alert('❌ Valor inválido');
                 return;
             }
-
-            if ((de === 'K' && valor < 0) || (de === 'C' && valor < -273.15)) {
-                mostrarErro('temperatura-error', '❌ Temperatura impossível (abaixo do zero absoluto)');
-                resultado.style.display = 'none';
-                return;
+            
+            let resultado = valor;
+            const unidades = {'C': '°C', 'F': '°F', 'K': 'K'};
+            
+            if (de === para) {
+                resultado = valor;
+            } else if (de === 'C' && para === 'F') {
+                resultado = (valor * 9/5) + 32;
+            } else if (de === 'C' && para === 'K') {
+                resultado = valor + 273.15;
+            } else if (de === 'F' && para === 'C') {
+                resultado = (valor - 32) * 5/9;
+            } else if (de === 'F' && para === 'K') {
+                resultado = (valor - 32) * 5/9 + 273.15;
+            } else if (de === 'K' && para === 'C') {
+                resultado = valor - 273.15;
+            } else if (de === 'K' && para === 'F') {
+                resultado = (valor - 273.15) * 9/5 + 32;
             }
+            
+            document.getElementById('resultadoTemp').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoTemp')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(2)}°</div>
+                 <div class="result-subtitle">${valor.toFixed(2)}${unidades[de]} = ${resultado.toFixed(2)}${unidades[para]}</div>`;
+            document.getElementById('resultadoTemp').classList.add('show');
 
-            let celsius = valor;
-            if (de === 'F') {
-                celsius = (valor - 32) * 5 / 9;
-            } else if (de === 'K') {
-                celsius = valor - 273.15;
-            }
-
-            let resultado_valor = celsius;
-            if (para === 'F') {
-                resultado_valor = (celsius * 9 / 5) + 32;
-            } else if (para === 'K') {
-                resultado_valor = celsius + 273.15;
-            }
-
-            const valorFormatado = formatarNumero(resultado_valor, decimals);
-            document.getElementById('valor_temperatura_resultado').textContent = `${valorFormatado} °${para}`;
-            resultado.style.display = 'block';
+            salvarNoHistorico('temperatura', { valor, de, para, resultado });
         }
 
-        // Conversão de Comprimento
         function converterComprimento() {
-            const valor = parseFloat(document.getElementById('comp_valor').value);
-            const de = document.getElementById('comp_de').value;
-            const para = document.getElementById('comp_para').value;
-            const decimals = document.getElementById('comp-decimals').value;
-            const resultado = document.getElementById('resultado_comprimento');
-            const errorDiv = document.getElementById('comprimento-error');
-
-            errorDiv.classList.remove('show');
-
-            if (!valor || valor < 0) {
-                resultado.style.display = 'none';
+            const valor = parseFloat(document.getElementById('valorComp').value);
+            const de = document.getElementById('compDe').value;
+            const para = document.getElementById('compPara').value;
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
                 return;
             }
-
-            const metros = valor * getMetros(de);
-            const valorConvertido = metros / getMetros(para);
-            const valorFormatado = formatarNumero(valorConvertido, decimals);
-            document.getElementById('valor_comprimento_resultado').textContent = `${valorFormatado} ${para}`;
-            resultado.style.display = 'block';
-        }
-
-        // Conversão de Massa
-        function converterMassa() {
-            const valor = parseFloat(document.getElementById('massa_valor').value);
-            const de = document.getElementById('massa_de').value;
-            const para = document.getElementById('massa_para').value;
-            const decimals = document.getElementById('massa-decimals').value;
-            const resultado = document.getElementById('resultado_massa');
-            const errorDiv = document.getElementById('massa-error');
-
-            errorDiv.classList.remove('show');
-
-            if (!valor || valor < 0) {
-                resultado.style.display = 'none';
-                return;
-            }
-
-            const kg = valor * getKg(de);
-            const valorConvertido = kg / getKg(para);
-            const valorFormatado = formatarNumero(valorConvertido, decimals);
-            document.getElementById('valor_massa_resultado').textContent = `${valorFormatado} ${para}`;
-            resultado.style.display = 'block';
-        }
-
-        // Conversão de Velocidade
-        function converterVelocidade() {
-            const valor = parseFloat(document.getElementById('vel_valor').value);
-            const de = document.getElementById('vel_de').value;
-            const para = document.getElementById('vel_para').value;
-            const decimals = document.getElementById('vel-decimals').value;
-            const resultado = document.getElementById('resultado_velocidade');
-            const errorDiv = document.getElementById('velocidade-error');
-
-            errorDiv.classList.remove('show');
-
-            if (!valor || valor < 0) {
-                resultado.style.display = 'none';
-                return;
-            }
-
-            const ms = valor * getMsPorUnidade(de);
-            const valorConvertido = ms / getMsPorUnidade(para);
-            const valorFormatado = formatarNumero(valorConvertido, decimals);
-            document.getElementById('valor_velocidade_resultado').textContent = `${valorFormatado} ${para}`;
-            resultado.style.display = 'block';
-        }
-
-        // Conversão de Volume
-        function converterVolume() {
-            const valor = parseFloat(document.getElementById('vol_valor').value);
-            const de = document.getElementById('vol_de').value;
-            const para = document.getElementById('vol_para').value;
-            const decimals = document.getElementById('vol-decimals').value;
-            const resultado = document.getElementById('resultado_volume');
-            const errorDiv = document.getElementById('volume-error');
-
-            errorDiv.classList.remove('show');
-
-            if (!valor || valor < 0) {
-                resultado.style.display = 'none';
-                return;
-            }
-
-            const ml = valor * getML(de);
-            const valorConvertido = ml / getML(para);
-            const valorFormatado = formatarNumero(valorConvertido, decimals);
-            document.getElementById('valor_volume_resultado').textContent = `${valorFormatado} ${para}`;
-            resultado.style.display = 'block';
-        }
-
-        // Conversão de Área
-        function converterArea() {
-            const valor = parseFloat(document.getElementById('area_valor').value);
-            const de = document.getElementById('area_de').value;
-            const para = document.getElementById('area_para').value;
-            const decimals = document.getElementById('area-decimals').value;
-            const resultado = document.getElementById('resultado_area');
-            const errorDiv = document.getElementById('area-error');
-
-            errorDiv.classList.remove('show');
-
-            if (!valor || valor < 0) {
-                resultado.style.display = 'none';
-                return;
-            }
-
-            const m2 = valor * getM2(de);
-            const valorConvertido = m2 / getM2(para);
-            const valorFormatado = formatarNumero(valorConvertido, decimals);
-            document.getElementById('valor_area_resultado').textContent = `${valorFormatado} ${para}`;
-            resultado.style.display = 'block';
-        }
-
-        // Funções auxiliares de conversão
-        function getMetros(unidade) {
+            
             const conversoes = {
                 'm': 1,
                 'km': 1000,
@@ -1518,10 +2356,30 @@
                 'yd': 0.9144,
                 'mi': 1609.34
             };
-            return conversoes[unidade];
+            
+            const emMetros = valor * conversoes[de];
+            const resultado = emMetros / conversoes[para];
+            
+            document.getElementById('resultadoComp').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoComp')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(4)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(4)} ${para}</div>`;
+            document.getElementById('resultadoComp').classList.add('show');
+
+            salvarNoHistorico('comprimento', { valor, de, para, resultado });
         }
 
-        function getKg(unidade) {
+        function converterMassa() {
+            const valor = parseFloat(document.getElementById('valorMassa').value);
+            const de = document.getElementById('massaDe').value;
+            const para = document.getElementById('massaPara').value;
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
             const conversoes = {
                 'kg': 1,
                 'g': 0.001,
@@ -1530,244 +2388,618 @@
                 'oz': 0.0283495,
                 'ton': 1000
             };
-            return conversoes[unidade];
+            
+            const emKg = valor * conversoes[de];
+            const resultado = emKg / conversoes[para];
+            
+            document.getElementById('resultadoMassa').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoMassa')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(4)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(4)} ${para}</div>`;
+            document.getElementById('resultadoMassa').classList.add('show');
+
+            salvarNoHistorico('massa', { valor, de, para, resultado });
         }
 
-        function getMsPorUnidade(unidade) {
+        function converterVelocidade() {
+            const valor = parseFloat(document.getElementById('valorVel').value);
+            const de = document.getElementById('velDe').value;
+            const para = document.getElementById('velPara').value;
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
             const conversoes = {
-                'kmh': 0.277778,
-                'ms': 1,
-                'mph': 0.44704,
-                'knot': 0.51444
+                'kmh': 1,
+                'ms': 3.6,
+                'mph': 1.60934,
+                'knot': 1.85200
             };
-            return conversoes[unidade];
+            
+            const emKmh = valor * conversoes[de];
+            const resultado = emKmh / conversoes[para];
+            
+            document.getElementById('resultadoVel').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoVel')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(2)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(2)} ${para}</div>`;
+            document.getElementById('resultadoVel').classList.add('show');
+
+            salvarNoHistorico('velocidade', { valor, de, para, resultado });
         }
 
-        function getML(unidade) {
+        function converterVolume() {
+            const valor = parseFloat(document.getElementById('valorVol').value);
+            const de = document.getElementById('volDe').value;
+            const para = document.getElementById('volPara').value;
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
             const conversoes = {
-                'L': 1000,
-                'mL': 1,
-                'gal': 3785.41,
-                'pt': 473.176,
-                'cup': 236.588,
-                'tbsp': 14.7868
+                'L': 1,
+                'mL': 0.001,
+                'gal': 3.78541,
+                'pt': 0.473176,
+                'cup': 0.236588,
+                'tbsp': 0.0147868
             };
-            return conversoes[unidade];
+            
+            const emLitros = valor * conversoes[de];
+            const resultado = emLitros / conversoes[para];
+            
+            document.getElementById('resultadoVol').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoVol')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(4)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(4)} ${para}</div>`;
+            document.getElementById('resultadoVol').classList.add('show');
+
+            salvarNoHistorico('volume', { valor, de, para, resultado });
         }
 
-        function getM2(unidade) {
+        function converterArea() {
+            const valor = parseFloat(document.getElementById('valorArea').value);
+            const de = document.getElementById('areaDe').value;
+            const para = document.getElementById('areaPara').value;
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
             const conversoes = {
                 'm2': 1,
                 'km2': 1000000,
                 'cm2': 0.0001,
                 'ft2': 0.092903,
                 'in2': 0.00064516,
-                'hectare': 10000,
+                'ha': 10000,
                 'acre': 4046.86
             };
-            return conversoes[unidade];
+            
+            const emM2 = valor * conversoes[de];
+            const resultado = emM2 / conversoes[para];
+            
+            document.getElementById('resultadoArea').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoArea')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(4)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(4)} ${para}</div>`;
+            document.getElementById('resultadoArea').classList.add('show');
+
+            salvarNoHistorico('area', { valor, de, para, resultado });
         }
 
-        // Sistema de abas
-        function openTab(evt, tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            const btns = document.querySelectorAll('.tab-btn');
-
-            tabs.forEach(tab => tab.classList.remove('active'));
-            btns.forEach(btn => btn.classList.remove('active'));
-
-            document.getElementById(tabName).classList.add('active');
-            evt.currentTarget.classList.add('active');
-        }
-
-        // Função para copiar
-        function copiar(elementoId) {
-            const elemento = document.getElementById(elementoId);
-            const texto = elemento.textContent;
-
-            navigator.clipboard.writeText(texto).then(() => {
-                mostrarMensagem('✅ Copiado com sucesso!');
-            }).catch(() => {
-                mostrarMensagem('❌ Erro ao copiar');
-            });
-        }
-
-        // Mostrar erro
-        function mostrarErro(elementoId, mensagem) {
-            const errorDiv = document.getElementById(elementoId);
-            errorDiv.textContent = mensagem;
-            errorDiv.classList.add('show');
-        }
-
-        // Mostrar mensagem de sucesso
-        function mostrarMensagem(texto) {
-            const msg = document.createElement('div');
-            msg.className = 'success-message';
-            msg.textContent = texto;
-            document.body.appendChild(msg);
-
-            setTimeout(() => {
-                msg.remove();
-            }, 2500);
-        }
-
-        // Favoritos
-        function adicionarFavorito(tipo) {
-            const valores = obterValoresAtuais(tipo);
-            if (!valores) return;
-
-            const favorito = {
-                id: Date.now(),
-                tipo: tipo,
-                ...valores
-            };
-
-            favoritos.push(favorito);
-            localStorage.setItem('favoritos', JSON.stringify(favoritos));
-            mostrarMensagem('⭐ Adicionado aos favoritos!');
-            exibirFavoritos();
-        }
-
-        function obterValoresAtuais(tipo) {
-            switch(tipo) {
-                case 'moedas':
-                    return {
-                        valor: document.getElementById('valor_moeda').value,
-                        para: document.getElementById('para_moeda').value,
-                        resultado: document.getElementById('valor_moeda_resultado').textContent
-                    };
-                case 'temperatura':
-                    return {
-                        valor: document.getElementById('temp_valor').value,
-                        de: document.getElementById('temp_de').value,
-                        para: document.getElementById('temp_para').value,
-                        resultado: document.getElementById('valor_temperatura_resultado').textContent
-                    };
-                case 'comprimento':
-                    return {
-                        valor: document.getElementById('comp_valor').value,
-                        de: document.getElementById('comp_de').value,
-                        para: document.getElementById('comp_para').value,
-                        resultado: document.getElementById('valor_comprimento_resultado').textContent
-                    };
-                case 'massa':
-                    return {
-                        valor: document.getElementById('massa_valor').value,
-                        de: document.getElementById('massa_de').value,
-                        para: document.getElementById('massa_para').value,
-                        resultado: document.getElementById('valor_massa_resultado').textContent
-                    };
-                case 'velocidade':
-                    return {
-                        valor: document.getElementById('vel_valor').value,
-                        de: document.getElementById('vel_de').value,
-                        para: document.getElementById('vel_para').value,
-                        resultado: document.getElementById('valor_velocidade_resultado').textContent
-                    };
-                case 'volume':
-                    return {
-                        valor: document.getElementById('vol_valor').value,
-                        de: document.getElementById('vol_de').value,
-                        para: document.getElementById('vol_para').value,
-                        resultado: document.getElementById('valor_volume_resultado').textContent
-                    };
-                case 'area':
-                    return {
-                        valor: document.getElementById('area_valor').value,
-                        de: document.getElementById('area_de').value,
-                        para: document.getElementById('area_para').value,
-                        resultado: document.getElementById('valor_area_resultado').textContent
-                    };
+        // FUNCIONALIDADES ADICIONADAS
+        // Limpar Histórico
+        function limparHistorico(tipo) {
+            if (tipo === 'combustivel') {
+                if (confirm('Tem certeza que deseja apagar todo o histórico de combustível?')) {
+                    historicoCombustivel = [];
+                    localStorage.removeItem('historicoCombustivel');
+                    document.getElementById('historicoCombustivel').classList.remove('show');
+                    alert('✓ Histórico limpo!');
+                }
+            } else {
+                if (confirm('Tem certeza que deseja apagar o histórico?')) {
+                    delete historicoConversoes[tipo];
+                    localStorage.setItem('historicoConversoes', JSON.stringify(historicoConversoes));
+                    alert('✓ Histórico limpo!');
+                }
             }
         }
 
-        function exibirFavoritos() {
-            const favSection = document.getElementById('favoritesSection');
-            const favList = document.getElementById('favoritesList');
-
-            if (favoritos.length === 0) {
-                favSection.style.display = 'none';
+        // Exportar em CSV
+        function exportarCSV() {
+            if (historicoCombustivel.length === 0) {
+                alert('⚠️ Nenhum histórico para exportar!');
                 return;
             }
 
-            favSection.style.display = 'block';
-            favList.innerHTML = '';
-
-            favoritos.forEach(fav => {
-                const btn = document.createElement('button');
-                btn.className = 'favorite-btn';
-                btn.innerHTML = `${fav.valor} → ${fav.resultado} <span onclick="removerFavorito(${fav.id})" style="margin-left: 8px; cursor: pointer;">✕</span>`;
-                btn.onclick = () => usarFavorito(fav);
-                favList.appendChild(btn);
+            let csv = 'Distância (km),Consumo (km/L),Preço (R$/L),Tipo,Custo Total (R$),Litros,Data/Hora\n';
+            historicoCombustivel.forEach(item => {
+                csv += `${item.distancia},${item.consumo},${item.preco},${item.tipo},${item.custoTotal.toFixed(2)},${item.litrosNecessarios.toFixed(2)},${item.timestamp}\n`;
             });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `historico-combustivel-${new Date().getTime()}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
         }
 
-        function removerFavorito(id) {
-            favoritos = favoritos.filter(f => f.id !== id);
+        // Resetar Tudo
+        function resetarTudo() {
+            if (confirm('⚠️ Isso irá apagar TODOS os dados salvos. Tem certeza?')) {
+                localStorage.clear();
+                historicoCombustivel = [];
+                historicoConversoes = {};
+                location.reload();
+            }
+        }
+
+        // Calculadora de Desconto
+        function abrirCalculadoraDesconto() {
+            const valor = prompt('Digite o valor original:');
+            if (valor === null) return;
+            
+            const desconto = prompt('Digite o percentual de desconto (%):');
+            if (desconto === null) return;
+            
+            const v = parseFloat(valor);
+            const d = parseFloat(desconto);
+            
+            if (isNaN(v) || isNaN(d) || v < 0 || d < 0) {
+                alert('❌ Valores inválidos!');
+                return;
+            }
+            
+            const valorDesconto = v * (d / 100);
+            const valorFinal = v - valorDesconto;
+            
+            alert(`Valor Original: R$ ${v.toFixed(2)}\nDesconto (${d}%): R$ ${valorDesconto.toFixed(2)}\nValor Final: R$ ${valorFinal.toFixed(2)}`);
+        }
+
+        // Calculadora de Acréscimo
+        function abrirCalculadoraAcrescimo() {
+            const valor = prompt('Digite o valor original:');
+            if (valor === null) return;
+            
+            const acrescimo = prompt('Digite o percentual de acréscimo (%):');
+            if (acrescimo === null) return;
+            
+            const v = parseFloat(valor);
+            const a = parseFloat(acrescimo);
+            
+            if (isNaN(v) || isNaN(a) || v < 0 || a < 0) {
+                alert('❌ Valores inválidos!');
+                return;
+            }
+            
+            const valorAcrescimo = v * (a / 100);
+            const valorFinal = v + valorAcrescimo;
+            
+            alert(`Valor Original: R$ ${v.toFixed(2)}\nAcréscimo (${a}%): R$ ${valorAcrescimo.toFixed(2)}\nValor Final: R$ ${valorFinal.toFixed(2)}`);
+        }
+
+        // Compartilhar Resultado
+        function compartilharResultado(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element.classList.contains('show')) {
+                alert('⚠️ Nenhum resultado para compartilhar!');
+                return;
+            }
+
+            const valor = element.querySelector('.result-value').textContent;
+            const detalhes = element.querySelector('.result-subtitle').textContent;
+            const texto = `📊 Hub Profissional - Resultado\n\n${valor}\n${detalhes}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Hub Profissional',
+                    text: texto
+                }).catch(err => console.log('Erro ao compartilhar:', err));
+            } else {
+                navigator.clipboard.writeText(texto).then(() => {
+                    alert('✓ Resultado copiado para compartilhar!');
+                });
+            }
+        }
+
+        // Favoritos
+        let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+
+        function salvarFavorito() {
+            const sectionId = document.querySelector('.section.active').id;
+            const sectionName = document.querySelector('.section.active .section-title').textContent;
+            
+            const favoritoExistente = favoritos.find(f => f.id === sectionId);
+            
+            if (favoritoExistente) {
+                favoritos = favoritos.filter(f => f.id !== sectionId);
+                alert('❌ Removido de favoritos');
+            } else {
+                favoritos.push({ id: sectionId, nome: sectionName });
+                alert('⭐ Adicionado aos favoritos!');
+            }
+            
             localStorage.setItem('favoritos', JSON.stringify(favoritos));
-            exibirFavoritos();
-            mostrarMensagem('❌ Removido dos favoritos');
         }
 
-        function usarFavorito(fav) {
-            // Lógica para restaurar conversão
-            mostrarMensagem('✅ Conversão restaurada!');
+        function irParaFavorito(id) {
+            switchSection(id);
         }
 
-        // QR Code
-        function compartilharQR(tipo) {
-            const resultado = document.getElementById(`valor_${tipo === 'moeda' ? 'moeda_resultado' : tipo + '_resultado'}`);
-            if (!resultado || !resultado.textContent) return;
+        function atualizarFavoritos() {
+            const container = document.querySelector('.favoritos-list');
+            if (!container) return;
+            
+            if (favoritos.length === 0) {
+                container.innerHTML = '<p style="color: var(--color-text-light); font-size: 12px; text-align: center;">Sem favoritos</p>';
+                return;
+            }
+            
+            container.innerHTML = favoritos.map(fav => 
+                `<button class="nav-button" onclick="irParaFavorito('${fav.id}')" style="border-color: var(--color-warning); color: var(--color-warning);">⭐ ${fav.nome.substring(0, 20)}...</button>`
+            ).join('');
+        }
 
-            const texto = `Conversão: ${resultado.textContent}`;
-            const qrContainer = document.getElementById('qrContainer');
-            qrContainer.innerHTML = '';
+        // Atualizar favoritos ao carregar
+        window.addEventListener('DOMContentLoaded', atualizarFavoritos);
 
-            new QRCode(qrContainer, {
-                text: texto,
-                width: 256,
-                height: 256,
-                colorDark: '#f4c430',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
+        // DECIMAL PLACES MANAGEMENT
+        let decimalPlaces = {
+            moedas: 2,
+            temperatura: 2,
+            comprimento: 4,
+            massa: 4,
+            velocidade: 2,
+            volume: 4,
+            area: 4
+        };
+
+        function getDecimalPlaces(tipo) {
+            const selector = document.getElementById(tipo + 'Decimal');
+            return selector ? parseInt(selector.value) : decimalPlaces[tipo];
+        }
+
+        // FAVORITES SYSTEM
+        let favoritesList = JSON.parse(localStorage.getItem('favoritos_conversores')) || [];
+
+        function toggleFavorite(tipo) {
+            const btn = document.getElementById('fav' + tipo.charAt(0).toUpperCase() + tipo.slice(1).replace('_', ''));
+            const exists = favoritesList.find(f => f.tipo === tipo);
+            
+            if (exists) {
+                favoritesList = favoritesList.filter(f => f.tipo !== tipo);
+                if (btn) btn.classList.remove('active');
+            } else {
+                const resultBox = document.querySelector(`#resultado${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+                if (resultBox && resultBox.classList.contains('show')) {
+                    favoritesList.push({
+                        tipo: tipo,
+                        resultado: resultBox.innerText,
+                        timestamp: new Date().toLocaleTimeString('pt-BR')
+                    });
+                    if (btn) btn.classList.add('active');
+                }
+            }
+            
+            localStorage.setItem('favoritos_conversores', JSON.stringify(favoritesList));
+            atualizarBotoesParticipares();
+        }
+
+        function atualizarBotoesParticipares() {
+            const tiposConversores = ['moedas', 'temperatura', 'comprimento', 'massa', 'velocidade', 'volume', 'area'];
+            tiposConversores.forEach(tipo => {
+                const btn = document.getElementById('fav' + tipo.charAt(0).toUpperCase() + tipo.slice(1));
+                const isFav = favoritesList.find(f => f.tipo === tipo);
+                if (btn) {
+                    if (isFav) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                }
             });
-
-            document.getElementById('qrModal').classList.add('show');
         }
 
-        function fecharQR() {
+        // QR CODE SYSTEM
+        function gerarQRCode(tipo) {
+            const resultBox = document.querySelector(`#resultado${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+            if (!resultBox || !resultBox.classList.contains('show')) {
+                alert('⚠️ Realize uma conversão primeiro!');
+                return;
+            }
+
+            const resultValue = resultBox.querySelector('.result-value').textContent;
+            const resultSubtitle = resultBox.querySelector('.result-subtitle').textContent;
+            const texto = `${resultValue}\n${resultSubtitle}`;
+
+            // Simple QR code simulation
+            const qrModal = document.getElementById('qrModal');
+            const qrCode = document.getElementById('qrCode');
+            const qrText = document.getElementById('qrText');
+            
+            qrCode.innerHTML = `<div style="width: 100%; height: 100%; background: white; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 2px solid #ddd; font-size: 10px; text-align: center; color: #666; overflow: hidden; word-break: break-all; padding: 10px;"><strong>QR:</strong><br>${texto.substring(0, 50)}...</div>`;
+            qrText.textContent = `Resultado da conversão: ${texto}`;
+            
+            qrModal.classList.add('show');
+        }
+
+        function closeQRModal() {
             document.getElementById('qrModal').classList.remove('show');
         }
 
-        // Sistema de Temas
-        const themeToggle = document.getElementById('themeToggle');
-        const html = document.documentElement;
-        const savedTheme = localStorage.getItem('theme');
-
-        if (savedTheme) {
-            html.setAttribute('data-theme', savedTheme);
-            themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-        } else {
-            detectarTemaDoSistema();
+        // AUTO-UPDATE CONVERSIONS
+        function atualizarMoeda() {
+            const valor = parseFloat(document.getElementById('valorMoeda').value);
+            if (!valor || valor <= 0) return;
+            converterMoeda();
         }
 
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        function atualizarTemp() {
+            const valor = parseFloat(document.getElementById('valorTemp').value);
+            if (!valor) return;
+            converterTemperatura();
+        }
 
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        function atualizarComp() {
+            const valor = parseFloat(document.getElementById('valorComp').value);
+            if (!valor || valor <= 0) return;
+            converterComprimento();
+        }
 
-            themeToggle.style.transform = 'rotate(180deg)';
-            setTimeout(() => {
-                themeToggle.style.transform = 'rotate(0deg)';
-            }, 300);
-        });
+        function atualizarMassa() {
+            const valor = parseFloat(document.getElementById('valorMassa').value);
+            if (!valor || valor <= 0) return;
+            converterMassa();
+        }
 
-        // Inicializar
-        atualizarStatus();
-        exibirFavoritos();
+        function atualizarVel() {
+            const valor = parseFloat(document.getElementById('valorVel').value);
+            if (!valor || valor <= 0) return;
+            converterVelocidade();
+        }
+
+        function atualizarVol() {
+            const valor = parseFloat(document.getElementById('valorVol').value);
+            if (!valor || valor <= 0) return;
+            converterVolume();
+        }
+
+        function atualizarArea() {
+            const valor = parseFloat(document.getElementById('valorArea').value);
+            if (!valor || valor <= 0) return;
+            converterArea();
+        }
+
+        // UPDATE ALL CONVERTERS WITH DECIMAL PLACES
+        const originalConverterMoeda = converterMoeda;
+        converterMoeda = function() {
+            const valor = parseFloat(document.getElementById('valorMoeda').value);
+            const selectElement = document.getElementById('moedaDestino');
+            const taxa = parseFloat(selectElement.options[selectElement.selectedIndex].value.split(' - ')[0]);
+            const moeda = selectElement.options[selectElement.selectedIndex].text.split(' - ')[0];
+            const decimals = getDecimalPlaces('moedas');
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
+            const resultado = valor * taxa;
+            document.getElementById('resultadoMoeda').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoMoeda')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(decimals)}</div>
+                 <div class="result-subtitle">R$ ${valor.toFixed(2)} = ${resultado.toFixed(decimals)} ${moeda}</div>`;
+            document.getElementById('resultadoMoeda').classList.add('show');
+
+            salvarNoHistorico('moedas', { valor, taxa, moeda, resultado: resultado.toFixed(decimals) });
+        };
+
+        const originalConverterTemperatura = converterTemperatura;
+        converterTemperatura = function() {
+            const valor = parseFloat(document.getElementById('valorTemp').value);
+            const de = document.getElementById('tempDe').value;
+            const para = document.getElementById('tempPara').value;
+            const decimals = getDecimalPlaces('temperatura');
+            
+            if (isNaN(valor)) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
+            let resultado = valor;
+            const unidades = {'C': '°C', 'F': '°F', 'K': 'K'};
+            
+            if (de === para) {
+                resultado = valor;
+            } else if (de === 'C' && para === 'F') {
+                resultado = (valor * 9/5) + 32;
+            } else if (de === 'C' && para === 'K') {
+                resultado = valor + 273.15;
+            } else if (de === 'F' && para === 'C') {
+                resultado = (valor - 32) * 5/9;
+            } else if (de === 'F' && para === 'K') {
+                resultado = (valor - 32) * 5/9 + 273.15;
+            } else if (de === 'K' && para === 'C') {
+                resultado = valor - 273.15;
+            } else if (de === 'K' && para === 'F') {
+                resultado = (valor - 273.15) * 9/5 + 32;
+            }
+            
+            document.getElementById('resultadoTemp').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoTemp')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(decimals)}°</div>
+                 <div class="result-subtitle">${valor.toFixed(2)}${unidades[de]} = ${resultado.toFixed(decimals)}${unidades[para]}</div>`;
+            document.getElementById('resultadoTemp').classList.add('show');
+
+            salvarNoHistorico('temperatura', { valor, de, para, resultado: resultado.toFixed(decimals) });
+        };
+
+        const originalConverterComprimento = converterComprimento;
+        converterComprimento = function() {
+            const valor = parseFloat(document.getElementById('valorComp').value);
+            const de = document.getElementById('compDe').value;
+            const para = document.getElementById('compPara').value;
+            const decimals = getDecimalPlaces('comprimento');
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
+            const conversoes = {
+                'm': 1, 'km': 1000, 'cm': 0.01, 'mm': 0.001,
+                'in': 0.0254, 'ft': 0.3048, 'yd': 0.9144, 'mi': 1609.34
+            };
+            
+            const emMetros = valor * conversoes[de];
+            const resultado = emMetros / conversoes[para];
+            
+            document.getElementById('resultadoComp').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoComp')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(decimals)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(decimals)} ${para}</div>`;
+            document.getElementById('resultadoComp').classList.add('show');
+
+            salvarNoHistorico('comprimento', { valor, de, para, resultado: resultado.toFixed(decimals) });
+        };
+
+        const originalConverterMassa = converterMassa;
+        converterMassa = function() {
+            const valor = parseFloat(document.getElementById('valorMassa').value);
+            const de = document.getElementById('massaDe').value;
+            const para = document.getElementById('massaPara').value;
+            const decimals = getDecimalPlaces('massa');
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
+            const conversoes = {
+                'kg': 1, 'g': 0.001, 'mg': 0.000001,
+                'lb': 0.453592, 'oz': 0.0283495, 'ton': 1000
+            };
+            
+            const emKg = valor * conversoes[de];
+            const resultado = emKg / conversoes[para];
+            
+            document.getElementById('resultadoMassa').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoMassa')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(decimals)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(decimals)} ${para}</div>`;
+            document.getElementById('resultadoMassa').classList.add('show');
+
+            salvarNoHistorico('massa', { valor, de, para, resultado: resultado.toFixed(decimals) });
+        };
+
+        const originalConverterVelocidade = converterVelocidade;
+        converterVelocidade = function() {
+            const valor = parseFloat(document.getElementById('valorVel').value);
+            const de = document.getElementById('velDe').value;
+            const para = document.getElementById('velPara').value;
+            const decimals = getDecimalPlaces('velocidade');
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
+            const conversoes = {
+                'kmh': 1, 'ms': 3.6, 'mph': 1.60934, 'knot': 1.85200
+            };
+            
+            const emKmh = valor * conversoes[de];
+            const resultado = emKmh / conversoes[para];
+            
+            document.getElementById('resultadoVel').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoVel')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(decimals)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(decimals)} ${para}</div>`;
+            document.getElementById('resultadoVel').classList.add('show');
+
+            salvarNoHistorico('velocidade', { valor, de, para, resultado: resultado.toFixed(decimals) });
+        };
+
+        const originalConverterVolume = converterVolume;
+        converterVolume = function() {
+            const valor = parseFloat(document.getElementById('valorVol').value);
+            const de = document.getElementById('volDe').value;
+            const para = document.getElementById('volPara').value;
+            const decimals = getDecimalPlaces('volume');
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
+            const conversoes = {
+                'L': 1, 'mL': 0.001, 'gal': 3.78541,
+                'pt': 0.473176, 'cup': 0.236588, 'tbsp': 0.0147868
+            };
+            
+            const emLitros = valor * conversoes[de];
+            const resultado = emLitros / conversoes[para];
+            
+            document.getElementById('resultadoVol').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoVol')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(decimals)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(decimals)} ${para}</div>`;
+            document.getElementById('resultadoVol').classList.add('show');
+
+            salvarNoHistorico('volume', { valor, de, para, resultado: resultado.toFixed(decimals) });
+        };
+
+        const originalConverterArea = converterArea;
+        converterArea = function() {
+            const valor = parseFloat(document.getElementById('valorArea').value);
+            const de = document.getElementById('areaDe').value;
+            const para = document.getElementById('areaPara').value;
+            const decimals = getDecimalPlaces('area');
+            
+            if (isNaN(valor) || valor < 0) {
+                alert('❌ Valor inválido');
+                return;
+            }
+            
+            const conversoes = {
+                'm2': 1, 'km2': 1000000, 'cm2': 0.0001,
+                'ft2': 0.092903, 'in2': 0.00064516, 'ha': 10000, 'acre': 4046.86
+            };
+            
+            const emM2 = valor * conversoes[de];
+            const resultado = emM2 / conversoes[para];
+            
+            document.getElementById('resultadoArea').innerHTML = 
+                `<button class="copy-btn" onclick="copiarResultado('resultadoArea')">📋 Copiar</button>
+                 <div class="result-label">Resultado</div>
+                 <div class="result-value">${resultado.toFixed(decimals)}</div>
+                 <div class="result-subtitle">${valor.toFixed(2)} ${de} = ${resultado.toFixed(decimals)} ${para}</div>`;
+            document.getElementById('resultadoArea').classList.add('show');
+
+            salvarNoHistorico('area', { valor, de, para, resultado: resultado.toFixed(decimals) });
+        };
+
+        // Initialize
+        atualizarBotoesParticipares();
     </script>
 </body>
 </html>
